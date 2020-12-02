@@ -5,11 +5,16 @@ import * as inky from 'inkjs';
 
 export default function Home() {
 
+    // Static vars
+    let globalTags = null;
+    let storyPath = "./story_test_tags.json";
+    let base_life = 100;
+
     // In lifecycle vars
     const [story, setStory] = useState(null);
 
-    // Static vars
-    let globalTags = null;
+    const [life, setLife] = useState(base_life);
+    const [tempLife, setTempLife] = useState(base_life);
 
     // DOM elements
     const storyContainer = useRef(null);
@@ -17,14 +22,15 @@ export default function Home() {
 
     const continueStory = (firstTime) => {
         let paragraphIndex = 0;
-        let delay = 1000.0;
+        let delay = 200.0;
         let customClasses = [];
 
         // Don't over-scroll past new content
         let previousBottomEdge = firstTime ? 0 : contentBottomEdgeY();
 
         if (story.canContinue) {
-            console.log("Story can continue");
+            console.log("===Story can continue===");
+            console.log(story);
 
             let paragraphText = story.Continue();
             let tags = story.currentTags;
@@ -48,7 +54,6 @@ export default function Home() {
             delay += 200.0;
 
             if (tags.length > 0) {
-                console.log("Tags:", tags);
 
                 // Any special tags included with this line
                 for (let i = 0; i < tags.length; i++) {
@@ -58,6 +63,16 @@ export default function Home() {
                     // customised to be used for other things too.
                     let splitTag = splitPropertyTag(tag);
 
+                    console.log(splitTag);
+
+
+                    if (splitTag && splitTag.property === "LIFE") {
+                        let val = parseInt(splitTag.val);
+                        console.log(val);
+                        setTempLife(life => life + val);
+                    }
+
+                    // Basic usage
                     // IMAGE: src
                     if (splitTag && splitTag.property == "IMAGE") {
                         let imageElement = document.createElement('img');
@@ -84,7 +99,6 @@ export default function Home() {
             }
 
             if (choices.length > 0) {
-                console.log("Choices:", choices);
 
                 story.currentChoices.forEach(function (choice) {
 
@@ -128,13 +142,13 @@ export default function Home() {
 
             setTimeout(() => {
                 continueStory();
-            }, 1000);
+            }, delay);
         }
     }
 
 
     // Utility functions //
-    
+
     const restart = () => {
         story.ResetState();
 
@@ -224,7 +238,7 @@ export default function Home() {
     }
 
     useEffect(() => {
-        fetch("story1.json")
+        fetch(storyPath)
             .then(function (response) {
                 console.log("Story file found");
                 return response.text();
@@ -240,9 +254,34 @@ export default function Home() {
     // After story is loaded
     useEffect(() => {
         if (null !== story) {
+            console.log("== Start story ==")
             continueStory();
         }
     }, [story])
+
+    useEffect(() => {
+        if (tempLife !== life) {
+            let duration = 400;
+            let valueTo = tempLife;
+            let valueFrom = life;
+            let dist = tempLife > life ? tempLife - life : life - tempLife;
+            let stepTime = duration / dist;
+            let stepVal = tempLife > life ? 1 : -1;
+
+            let interval = setInterval(() => {
+                valueFrom += stepVal;
+                if (stepVal > 0 && valueFrom >= valueTo) {
+                    setLife(valueTo);
+                    clearInterval(interval);
+                } else if (stepVal < 0 && valueTo >= valueFrom) {
+                    setLife(valueTo);
+                    clearInterval(interval);
+                } else {
+                    setLife(valueFrom);
+                }
+            }, stepTime)
+        }
+    }, [tempLife])
 
     return (
         <div>
@@ -252,6 +291,11 @@ export default function Home() {
 
             <main>
                 <h1>Dating Sim</h1>
+
+                <p>Life: {life}%</p>
+                <div className="lifebar-container">
+                    <p className="lifebar" style={{ width: `${life}%` }}></p>
+                </div>
 
                 <div className="outerContainer" ref={outerScrollContainer}>
                     <div id="story" ref={storyContainer}></div>
