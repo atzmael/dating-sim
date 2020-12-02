@@ -7,8 +7,9 @@ export default function Home() {
 
     // Static vars
     let globalTags = null;
-    let storyPath = "./story_test_tags.json";
+    let storyPath = "./story1";
     let base_life = 100;
+    let tempDelay = 0;
 
     // In lifecycle vars
     const [story, setStory] = useState(null);
@@ -19,6 +20,7 @@ export default function Home() {
     // DOM elements
     const storyContainer = useRef(null);
     const outerScrollContainer = useRef(null);
+    const inputName = useRef(null);
 
     const continueStory = (firstTime) => {
         let paragraphIndex = 0;
@@ -40,19 +42,6 @@ export default function Home() {
             console.log("Curr tags:", tags);
             console.log("Curr choices:", choices);
 
-            // Create paragraph element (initially hidden)
-            let paragraphElement = document.createElement('p');
-            paragraphElement.innerHTML = paragraphText;
-            storyContainer.current.appendChild(paragraphElement);
-
-            // Add any custom classes derived from ink tags
-            for (let i = 0; i < customClasses.length; i++)
-                paragraphElement.classList.add(customClasses[i]);
-
-            // Fade in paragraph after a short delay
-            showAfter(delay, paragraphElement);
-            delay += 200.0;
-
             if (tags.length > 0) {
 
                 // Any special tags included with this line
@@ -70,6 +59,10 @@ export default function Home() {
                         let val = parseInt(splitTag.val);
                         console.log(val);
                         setTempLife(life => life + val);
+                    }
+
+                    if (splitTag && splitTag.property === "DELAY") {
+                        tempDelay = parseInt(splitTag.val) * 1000;
                     }
 
                     // Basic usage
@@ -98,6 +91,26 @@ export default function Home() {
                 }
             }
 
+
+            // Create paragraph element (initially hidden)
+            let paragraphElement = document.createElement('p');
+            paragraphElement.innerHTML = paragraphText;
+            storyContainer.current.appendChild(paragraphElement);
+
+            // Add any custom classes derived from ink tags
+            for (let i = 0; i < customClasses.length; i++)
+                paragraphElement.classList.add(customClasses[i]);
+
+            // Fade in paragraph after a short delay
+            showAfter(delay, paragraphElement);
+            delay += 200.0;
+
+
+            if (tempDelay !== 0) {
+                delay = tempDelay;
+                tempDelay = 0;
+            }
+
             if (choices.length > 0) {
 
                 story.currentChoices.forEach(function (choice) {
@@ -115,8 +128,6 @@ export default function Home() {
                     // Click on choice
                     let choiceAnchorEl = choiceParagraphElement.querySelector("button.answer");
                     choiceAnchorEl.addEventListener("click", function (event) {
-
-                        // Don't follow <a> link
                         event.preventDefault();
 
                         // Remove all existing choices
@@ -141,11 +152,11 @@ export default function Home() {
             }
 
             setTimeout(() => {
+                console.log("Waited:", delay);
                 continueStory();
             }, delay);
         }
     }
-
 
     // Utility functions //
 
@@ -237,8 +248,26 @@ export default function Home() {
         return null;
     }
 
+    // Functions
+
+    const handleInputName = (val) => {
+        if (story) {
+            if (!!story.variablesState["user_name"]) {
+                story.variablesState["user_name"] = val;
+            }
+        }
+    }
+
+    const beginStory = () => {
+        if (null !== story) {
+            console.log("== Setup and start story ==")
+            setTempLife(parseInt(story.variablesState["love_bar"]))
+            continueStory();
+        }
+    }
+
     useEffect(() => {
-        fetch(storyPath)
+        fetch(`${storyPath}.json`)
             .then(function (response) {
                 console.log("Story file found");
                 return response.text();
@@ -246,22 +275,15 @@ export default function Home() {
             .then(function (storyContent) {
                 console.log("Story file loaded");
                 let newStory = new inky.Story(storyContent);
-                console.log("New ink story created")
+                globalTags = newStory.globalTags;
+                console.log("New ink story created and set")
                 setStory(newStory);
             });
     }, [])
 
-    // After story is loaded
-    useEffect(() => {
-        if (null !== story) {
-            console.log("== Start story ==")
-            continueStory();
-        }
-    }, [story])
-
     useEffect(() => {
         if (tempLife !== life) {
-            let duration = 400;
+            let duration = 200;
             let valueTo = tempLife;
             let valueFrom = life;
             let dist = tempLife > life ? tempLife - life : life - tempLife;
@@ -291,6 +313,10 @@ export default function Home() {
 
             <main>
                 <h1>Dating Sim</h1>
+
+                <input type="text" defaultValue="" onChange={(e) => handleInputName(e.currentTarget.value)} />
+
+                <button onClick={beginStory}>Start</button>
 
                 <p>Life: {life}%</p>
                 <div className="lifebar-container">
