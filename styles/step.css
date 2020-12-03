@@ -48,8 +48,12 @@
     margin-top: 23px;
     cursor: pointer;
 }
-.step .content .btn_continue {
+.step .btn_continue {
     cursor: pointer;
+}
+
+.step .btn_next {
+    margin-top: 20px;
 }
 
 /* HOME */

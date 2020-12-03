@@ -3,36 +3,40 @@ import { useEffect, useRef, useState } from 'react'
 
 import * as inky from 'inkjs';
 
-export default function Home() {
+// Static vars
+let globalTags = null;
+let story1Path = "./story1";
+let story2Path = "./story2";
+let base_life = 100;
+let base_timer = 10;
+let tempDelay = 0;
+let paused = true;
+let friend_name = "Sam";
+let stepsIdent = [
+    "HOME",
+    "QUESTIONS",
+    "INTRO_ONE",
+    "INTRO_TWO",
+    "GAME",
+    "CONCLUSION"
+]
+let currentStepIdent = 0;
+let interval = null;
+let timeout = null;
+let chatmode = "speak";
 
-    // Static vars
-    let globalTags = null;
-    let story1Path = "./story1";
-    let story2Path = "./story2";
-    let base_life = 100;
-    let tempDelay = 0;
-    let paused = true;
-    let friend_name = "Sam";
-    let stepsIdent = [
-        "HOME",
-        "QUESTIONS",
-        "INTRO_ONE",
-        "INTRO_TWO",
-        "GAME",
-        "CONCLUSION"
-    ]
-    let currentStepIdent = 0;
+const Home = () => {
 
     // In lifecycle vars // useState
     const [stories, setStories] = useState([]);
 
     const [life, setLife] = useState(base_life);
-    const [timer, setTimer] = useState(10);
     const [tempLife, setTempLife] = useState(base_life);
     const [currentActiveStory, setCurrentActiveStory] = useState(0);
     const [step, setStep] = useState(0);
     const [username, setUsername] = useState("Camille");
     const [isIntro2, setIsIntro2] = useState(false);
+    const [displayNextBtn, setDisplayNextBtn] = useState(false);
 
     // DOM elements // useRef
     const storyContainer = useRef(null);
@@ -40,13 +44,17 @@ export default function Home() {
     const paragraphContainer = useRef(null);
     const imgLeftContainer = useRef(null);
     const imgRightContainer = useRef(null);
+    const timerBar = useRef(null);
 
     const continueStory = (firstTime = false) => {
         let delay = 200.0;
         let customClasses = [];
         let story = stories[currentActiveStory];
 
-        console.log(currentActiveStory, story);
+        let showThough = false;
+        let userHasClicked = false;
+
+        //console.log(currentActiveStory, story);
 
         /* // Don't over-scroll past new content
         let previousBottomEdge = firstTime ? 0 : contentBottomEdgeY(); */
@@ -60,7 +68,7 @@ export default function Home() {
             let tags = story.currentTags;
             let choices = story.currentChoices;
 
-            console.log("Curr paragraph:", paragraphText);
+            // console.log("Curr paragraph:", paragraphText);
             console.log("Curr tags:", tags);
             console.log("Curr choices:", choices);
 
@@ -73,9 +81,6 @@ export default function Home() {
                     // Detect tags of the form "X: Y". Currently used for IMAGE and CLASS but could be
                     // customised to be used for other things too.
                     let splitTag = splitPropertyTag(tag);
-
-                    console.log(splitTag);
-
 
                     if (splitTag && splitTag.property === "LIFE") {
                         let val = parseInt(splitTag.val);
@@ -92,10 +97,19 @@ export default function Home() {
                         setStoriesGlobalVars([{ label: "second_choice", value: second_choice }])
                     }
 
-                    if (splitTag && splitTag.val === "END_STORY_ONE") {
+                    if (splitTag && (splitTag.val === "END_STORY_ONE" || splitTag.val === "END_STORY_TWO")) {
                         setCurrentActiveStory(1);
                         paused = true;
+                        setDisplayNextBtn(true);
                         console.log("==== Pass to story 2 ====")
+                    }
+
+                    if (splitTag && splitTag.property === "CHAT_TYPE") {
+                        if ("though" === splitTag.val) {
+                            showThough = true;
+                        }
+                        chatmode = splitTag.val
+                        console.log("================CHAT MODE CHANGED:", splitTag.val)
                     }
 
                     // Basic usage
@@ -149,6 +163,46 @@ export default function Home() {
 
                 let choiceParagraphContainer = document.createElement('div');
                 choiceParagraphContainer.classList.add('choiceContainer')
+
+                /* if (showThough) {
+                    let paragraphElement = document.createElement('p');
+                    paragraphElement.classList.add('infoThough');
+                    paragraphElement.innerHTML = "Dans les pensées de Sam...";
+                    choiceParagraphContainer.prepend(paragraphElement);
+                } */
+
+
+                if ("though" === chatmode) {
+                    console.log("HEREEEEEEE")
+                    let random = Math.round(Math.random());
+                    timeout = setTimeout(() => {
+                        clearTimeout(timeout);
+                        clearInterval(interval);
+                        userHasClicked = false;
+
+                        // Remove all existing choices
+                        removeAll("p.choice");
+                        removeAll("div.choiceContainer");
+
+                        // Tell the story where to go next
+                        story.ChooseChoiceIndex(random);
+
+                        // Aaand loop
+                        continueStory();
+                    }, 10000);
+                    let time = base_timer;
+                    interval = setInterval(() => {
+                        time -= 0.1;
+                        if (userHasClicked) {
+                            clearTimeout(timeout);
+                            clearInterval(interval);
+                        } else if (time > 0) {
+                            timerBar.current.style.height = `${time * 100 / base_timer}%`;
+                        }
+                        console.log(time);
+                    }, 100)
+                }
+
                 story.currentChoices.forEach(function (choice) {
 
                     // Create paragraph with anchor element
@@ -161,6 +215,7 @@ export default function Home() {
                     // Fade choice in after a short delay
                     showAfter(delay, choiceParagraphElement);
                     delay += 200.0;
+
 
                     // Click on choice
                     let choiceAnchorEl = choiceParagraphElement.querySelector("button.answer");
@@ -176,6 +231,12 @@ export default function Home() {
 
                         // Aaand loop
                         continueStory();
+
+                        if ("though" === chatmode) {
+                            clearTimeout(timeout);
+                            clearInterval(interval);
+                            userHasClicked = true;
+                        }
                     });
                 });
                 storyContainer.current.appendChild(choiceParagraphContainer);
@@ -189,6 +250,15 @@ export default function Home() {
             if (!firstTime) {
                 scrollDown(previousBottomEdge);
             } */
+
+            if (showThough) {
+                let paragraphElement = document.createElement('p');
+                paragraphElement.classList.add('paraphThough');
+                paragraphElement.innerHTML = "Dans les pensées de Sam...";
+                paragraphContainer.current.prepend(paragraphElement);
+
+                showThough = false;
+            }
 
             if (paused) {
                 return;
@@ -326,6 +396,7 @@ export default function Home() {
             }
         } else if ("INTRO_TWO" === type) {
             setIsIntro2(true);
+            setDisplayNextBtn(false);
         }
     }
 
@@ -454,13 +525,13 @@ export default function Home() {
                     </div>
                 </div>
                 {/* GAME */}
-                <div className={`step game ${4 === step ? 'show' : ''}`}>
+                <div className={`step game ${4 === step ? 'show' : ''} ${"speak" === chatmode ? "speak-mode" : "though-mode"}`}>
                     <img className="background" src={`img/bg_screen_2.png`} />
                     <div className="lovebar-container">
                         <p className="lovebar" style={{ height: `${life}%` }}></p>
                     </div>
                     <div className="timer-container">
-                        <p className="timer" style={{ height: `${timer * 10}%` }}></p>
+                        <p className="timer" ref={timerBar}></p>
                     </div>
 
                     <div className="players">
@@ -473,9 +544,10 @@ export default function Home() {
                         {/* <div className="gradient-top"></div> */}
                         <div id="story" ref={storyContainer}>
                             <div className="paragraphContainer" ref={paragraphContainer}></div>
+                            {displayNextBtn && <button className="btn_continue btn_next" onClick={(e) => handleSteps(e, !isIntro2 ? "INTRO_TWO" : "CONCLUSION")}><img src="img/btn-continue.png" /></button>}
+                            <div className="bg-though-mode"></div>
                         </div>
                         {/* DEBUG FEAT */}
-                        <button className="btn_continue" onClick={(e) => handleSteps(e, !isIntro2 ? "INTRO_TWO" : "CONCLUSION")}><img src="img/btn-continue.png" /></button>
                         {/* DEBUG FEAT */}
                     </div>
                     <div className="rightImages" ref={imgRightContainer}></div>
@@ -491,3 +563,5 @@ export default function Home() {
         </div>
     )
 }
+
+export default Home;

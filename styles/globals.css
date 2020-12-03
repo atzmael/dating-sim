@@ -85,7 +85,7 @@ a {
   bottom: 0; */
   padding-top: 30px;
   margin-top: 30px;
-  border-top: 2px solid rgba(255,255,255,0.5);
+  border-top: 2px solid rgba(255, 255, 255, 0.5);
   height: 310px;
 }
 
@@ -113,6 +113,13 @@ a {
   background-color: transparent;
   border-bottom-left-radius: 15px;
   border-bottom-right-radius: 0;
+}
+
+.paraphThough {
+  color: rgba(255, 255, 225, 0.5);
+  letter-spacing: 2%;
+  transform: scaleY(-1);
+  text-align: center;
 }
 
 .choice {
@@ -272,4 +279,71 @@ a {
 .players .friend.active {
   background-color: #fdb572;
   color: #3e00a4;
+}
+
+.though-mode .choiceContainer {
+  height: 100%;
+  position: absolute;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  border: none;
+  z-index: 22;
+}
+
+.bg-though-mode {
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #3e00a4;
+  z-index: 20;
+}
+
+.story-two .discussion_text {
+  transform: scaleY(-1);
+  border: #e7f291 2px solid;
+  color: #e7f291;
+  background-color: transparent;
+  padding: 16px 35px;
+}
+.story-two .discussion_text:not(:last-child) {
+  margin: 0 0 15px 0;
+}
+.story-two .discussion_text.right {
+  background-color: #fdb572;
+  color: #3e00a4;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 0;
+}
+
+.though-mode .bg-though-mode {
+  opacity: 1;
+  pointer-events: visible;
+}
+
+.though-mode .choiceContainer .choice {
+  flex: 1;
+  width: 100%;
+  margin-bottom: 30px;
+}
+.though-mode .choiceContainer .choice .answer {
+  height: 100%;
+  border-style: dashed;
+}
+.though-mode .choiceContainer .choice .answer:hover {
+  background-color: #fdb572;
+  color: #3e00a4;
+}
+.though-mode .choiceContainer .choice:first-child .answer {
+  border-bottom-right-radius: 0;
+}
+.though-mode .choiceContainer .choice:last-child .answer {
+  border-bottom-right-radius: 15px;
 }
