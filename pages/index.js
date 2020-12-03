@@ -69,6 +69,7 @@ const Home = () => {
             let paragraphText = removeNamePrefix(story.Continue());
             let tags = story.currentTags;
             let choices = story.currentChoices;
+            let activeUser = false
 
             // console.log("Curr paragraph:", paragraphText);
             console.log("Curr tags:", tags);
@@ -83,6 +84,12 @@ const Home = () => {
                     // Detect tags of the form "X: Y". Currently used for IMAGE and CLASS but could be
                     // customised to be used for other things too.
                     let splitTag = splitPropertyTag(tag);
+
+                    if (splitTag && splitTag.property === "CHAR") {
+                        if(splitTag.val === 'USER') {
+                            activeUser = true
+                        }
+                    }
 
                     if (splitTag && splitTag.property === "LIFE") {
                         let val = parseInt(splitTag.val);
@@ -150,6 +157,9 @@ const Home = () => {
             // Create paragraph element (initially hidden)
             let paragraphElement = document.createElement('p');
             paragraphElement.classList.add('discussion_text');
+            if(activeUser) {
+                paragraphElement.classList.add('left');
+            }
             paragraphElement.innerHTML = paragraphText;
             paragraphContainer.current.prepend(paragraphElement);
 
