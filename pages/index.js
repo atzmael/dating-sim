@@ -168,7 +168,7 @@ export default function Home() {
             // Extend height to fit
             // We do this manually so that removing elements and creating new ones doesn't
             // cause the height (and therefore scroll) to jump backwards temporarily.
-            storyContainer.current.style.height = contentBottomEdgeY() + "px";
+           //storyContainer.current.style.height = contentBottomEdgeY() + "px";
 
             if (!firstTime) {
                 scrollDown(previousBottomEdge);
