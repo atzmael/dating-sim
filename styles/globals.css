@@ -130,17 +130,30 @@ a {
   color: #fdb572;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 15px;
+  font-weight: 600;
+  letter-spacing: 2%;
 }
 .discussion_text:not(:last-child) {
   margin: 0 0 15px 0;
 }
 .discussion_text.left {
   float: left;
-  color: #3e00a4;
-  border: none;
-  background-color: #e7f291;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 15px;
+  color: #e7f291;
+  border-color: #e7f291;
+}
+
+.story-one .discussion_text.left {
+  background-color: #e7f291;
+  color: #3e00a4;
+}
+
+.story-two .discussion_text:not(.left) {
+  background-color: #fdb572;
+  color: #3e00a4;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 0;
 }
 
 .paraphThough {
@@ -148,6 +161,8 @@ a {
   letter-spacing: 2%;
   transform: scaleY(-1);
   text-align: center;
+  float: left;
+  width: 100%;
 }
 
 .choice {
@@ -180,11 +195,16 @@ a {
   width: 100%;
   padding: 18px;
   font-size: 20px;
+  font-weight: 600;
 }
 
-.answer:hover {
-  background-color: #ffffff;
-  color: black;
+.story-one .answer:hover {
+  background-color: #e7f291;
+  color: #3e00a4;
+}
+.story-two .answer:hover {
+  background-color: #fdb572;
+  color: #3e00a4;
 }
 
 .hide {
@@ -231,6 +251,11 @@ a {
   right: 60px;
   transform: translateY(-50%);
   box-sizing: content-box;
+  opacity: 0;
+}
+
+.timer-container.show {
+  opacity: 1;
 }
 .timer {
   height: 100%;
@@ -332,23 +357,6 @@ a {
   height: 100%;
   background-color: #3e00a4;
   z-index: 20;
-}
-
-.story-two .discussion_text {
-  transform: scaleY(-1);
-  border: #e7f291 2px solid;
-  color: #e7f291;
-  background-color: transparent;
-  padding: 16px 35px;
-}
-.story-two .discussion_text:not(:last-child) {
-  margin: 0 0 15px 0;
-}
-.story-two .discussion_text.right {
-  background-color: #fdb572;
-  color: #3e00a4;
-  border-bottom-left-radius: 15px;
-  border-bottom-right-radius: 0;
 }
 
 .though-mode .bg-though-mode {

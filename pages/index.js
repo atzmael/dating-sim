@@ -44,7 +44,9 @@ const Home = () => {
     const paragraphContainer = useRef(null);
     const imgLeftContainer = useRef(null);
     const imgRightContainer = useRef(null);
+    const timerBarContainer = useRef(null);
     const timerBar = useRef(null);
+    const gameContainer = useRef(null);
 
     const continueStory = (firstTime = false) => {
         let delay = 200.0;
@@ -52,6 +54,7 @@ const Home = () => {
         let story = stories[currentActiveStory];
 
         let showThough = false;
+        let showSpeak = false;
         let userHasClicked = false;
 
         //console.log(currentActiveStory, story);
@@ -84,7 +87,7 @@ const Home = () => {
                     let splitTag = splitPropertyTag(tag);
 
                     if (splitTag && splitTag.property === "CHAR") {
-                        if(splitTag.val === 'USER') {
+                        if (splitTag.val === 'USER') {
                             activeUser = true
                         }
                     }
@@ -96,7 +99,7 @@ const Home = () => {
                     }
 
                     if (splitTag && splitTag.property === "DELAY") {
-                        tempDelay = parseInt(splitTag.val) * 1000;
+                        delay += splitTag.val
                     }
 
                     if (splitTag && splitTag.property === "SUBJECT") {
@@ -114,6 +117,15 @@ const Home = () => {
                     if (splitTag && splitTag.property === "CHAT_TYPE") {
                         if ("though" === splitTag.val) {
                             showThough = true;
+                            timerBarContainer.current.classList.add('show');
+                            gameContainer.current.classList.remove("speak-mode");
+                            gameContainer.current.classList.add("though-mode");
+                        }
+                        if ("speak" === splitTag.val) {
+                            showSpeak = true;
+                            timerBarContainer.current.classList.remove('show');
+                            gameContainer.current.classList.remove("though-mode");
+                            gameContainer.current.classList.add("speak-mode");
                         }
                         chatmode = splitTag.val
                         console.log("================CHAT MODE CHANGED:", splitTag.val)
@@ -161,10 +173,19 @@ const Home = () => {
                 }
             }
 
+            if (showSpeak) {
+                let paragraphElement = document.createElement('p');
+                paragraphElement.classList.add('paraphThough');
+                paragraphElement.innerHTML = "De retour dans la discussion";
+                paragraphContainer.current.prepend(paragraphElement);
+
+                showSpeak = false;
+            }
+
             // Create paragraph element (initially hidden)
             let paragraphElement = document.createElement('p');
             paragraphElement.classList.add('discussion_text');
-            if(activeUser) {
+            if (activeUser) {
                 paragraphElement.classList.add('left');
             }
             paragraphElement.innerHTML = paragraphText;
@@ -195,36 +216,76 @@ const Home = () => {
                     choiceParagraphContainer.prepend(paragraphElement);
                 } */
 
-
-                if ("though" === chatmode) {
-                    console.log("HEREEEEEEE")
+                let boooool = false
+                if ("though" === chatmode && boooool) {
                     let random = Math.round(Math.random());
-                    timeout = setTimeout(() => {
-                        clearTimeout(timeout);
-                        clearInterval(interval);
-                        userHasClicked = false;
-
-                        // Remove all existing choices
-                        removeAll("p.choice");
-                        removeAll("div.choiceContainer");
-
-                        // Tell the story where to go next
-                        story.ChooseChoiceIndex(random);
-
-                        // Aaand loop
-                        continueStory();
-                    }, 10000);
                     let time = base_timer;
-                    interval = setInterval(() => {
-                        time -= 0.1;
-                        if (userHasClicked) {
+
+                    if (null !== timeout) {
+                        clearTimeout(timeout);
+                        timeout = setTimeout(() => {
                             clearTimeout(timeout);
                             clearInterval(interval);
-                        } else if (time > 0) {
-                            timerBar.current.style.height = `${time * 100 / base_timer}%`;
-                        }
-                        console.log(time);
-                    }, 100)
+                            userHasClicked = false;
+                            time = base_timer;
+
+                            // Remove all existing choices
+                            removeAll("p.choice");
+                            removeAll("div.choiceContainer");
+
+                            // Tell the story where to go next
+                            story.ChooseChoiceIndex(random);
+
+                            // Aaand loop
+                            continueStory();
+                        }, 10000);
+                    } else {
+                        timeout = setTimeout(() => {
+                            clearTimeout(timeout);
+                            clearInterval(interval);
+                            userHasClicked = false;
+                            time = base_timer;
+
+                            // Remove all existing choices
+                            removeAll("p.choice");
+                            removeAll("div.choiceContainer");
+
+                            // Tell the story where to go next
+                            story.ChooseChoiceIndex(random);
+
+                            // Aaand loop
+                            continueStory();
+                        }, 10000);
+                    }
+
+                    if (null !== interval) {
+                        clearInterval(interval);
+                        interval = setInterval(() => {
+                            time -= 0.1;
+                            if (userHasClicked) {
+                                clearTimeout(timeout);
+                                clearInterval(interval);
+                                time = base_timer;
+                                userHasClicked = false;
+                            } else if (time > 0) {
+                                timerBar.current.style.height = `${time * 100 / base_timer}%`;
+                            }
+                            console.log(time);
+                        }, 100)
+                    } else {
+                        interval = setInterval(() => {
+                            time -= 0.1;
+                            if (userHasClicked) {
+                                clearTimeout(timeout);
+                                clearInterval(interval);
+                                time = base_timer;
+                                userHasClicked = false;
+                            } else if (time > 0) {
+                                timerBar.current.style.height = `${time * 100 / base_timer}%`;
+                            }
+                            console.log(time);
+                        }, 100)
+                    }
                 }
 
                 story.currentChoices.forEach(function (choice) {
@@ -233,7 +294,7 @@ const Home = () => {
 
                     let choiceParagraphElement = document.createElement('p');
                     choiceParagraphElement.classList.add("choice");
-                    choiceParagraphElement.innerHTML = `<button class="answer"><span>${removeNamePrefix(choice.text)}</span></button>`
+                    choiceParagraphElement.innerHTML = `<button class="answer"><span>${removeNamePrefix(choice.text)}</span></button>`;
                     choiceParagraphContainer.appendChild(choiceParagraphElement)
 
                     // Fade choice in after a short delay
@@ -243,25 +304,38 @@ const Home = () => {
 
                     // Click on choice
                     let choiceAnchorEl = choiceParagraphElement.querySelector("button.answer");
-                    choiceAnchorEl.addEventListener("click", function (event) {
-                        event.preventDefault();
 
-                        // Remove all existing choices
-                        removeAll("p.choice");
-                        removeAll("div.choiceContainer");
-
-                        // Tell the story where to go next
-                        story.ChooseChoiceIndex(choice.index);
-
-                        // Aaand loop
-                        continueStory();
-
-                        if ("though" === chatmode) {
-                            clearTimeout(timeout);
-                            clearInterval(interval);
+                    if ("though" === chatmode) {
+                        choiceAnchorEl.addEventListener("click", function (event) {
+                            event.preventDefault();
                             userHasClicked = true;
-                        }
-                    });
+
+                            // Remove all existing choices
+                            removeAll("p.choice");
+                            removeAll("div.choiceContainer");
+
+                            // Tell the story where to go next
+                            story.ChooseChoiceIndex(choice.index);
+
+                            // Aaand loop
+                            continueStory();
+                        });
+                    } else {
+                        choiceAnchorEl.addEventListener("click", function (event) {
+                            event.preventDefault();
+
+                            // Remove all existing choices
+                            removeAll("p.choice");
+                            removeAll("div.choiceContainer");
+
+                            // Tell the story where to go next
+                            story.ChooseChoiceIndex(choice.index);
+
+                            // Aaand loop
+                            continueStory();
+                        });
+                    }
+
                 });
                 storyContainer.current.appendChild(choiceParagraphContainer);
             }
@@ -549,12 +623,12 @@ const Home = () => {
                     </div>
                 </div>
                 {/* GAME */}
-                <div className={`step game ${4 === step ? 'show' : ''} ${"speak" === chatmode ? "speak-mode" : "though-mode"}`}>
+                <div className={`step game ${4 === step ? 'show' : ''} speak-mode`} ref={gameContainer}>
                     <img className="background" src={`img/bg_screen_2.png`} />
                     <div className="lovebar-container">
                         <p className="lovebar" style={{ height: `${life}%` }}></p>
                     </div>
-                    <div className="timer-container">
+                    <div className="timer-container" ref={timerBarContainer}>
                         <p className="timer" ref={timerBar}></p>
                     </div>
 
