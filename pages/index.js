@@ -46,6 +46,7 @@ const Home = () => {
     const imgRightContainer = useRef(null);
     const timerBarContainer = useRef(null);
     const timerBar = useRef(null);
+    const gameContainer = useRef(null);
 
     const continueStory = (firstTime = false) => {
         let delay = 200.0;
@@ -86,7 +87,7 @@ const Home = () => {
                     let splitTag = splitPropertyTag(tag);
 
                     if (splitTag && splitTag.property === "CHAR") {
-                        if(splitTag.val === 'USER') {
+                        if (splitTag.val === 'USER') {
                             activeUser = true
                         }
                     }
@@ -98,7 +99,7 @@ const Home = () => {
                     }
 
                     if (splitTag && splitTag.property === "DELAY") {
-                        tempDelay = parseInt(splitTag.val) * 1000;
+                        delay += splitTag.val
                     }
 
                     if (splitTag && splitTag.property === "SUBJECT") {
@@ -117,10 +118,14 @@ const Home = () => {
                         if ("though" === splitTag.val) {
                             showThough = true;
                             timerBarContainer.current.classList.add('show');
+                            gameContainer.current.classList.remove("speak-mode");
+                            gameContainer.current.classList.add("though-mode");
                         }
                         if ("speak" === splitTag.val) {
                             showSpeak = true;
                             timerBarContainer.current.classList.remove('show');
+                            gameContainer.current.classList.remove("though-mode");
+                            gameContainer.current.classList.add("speak-mode");
                         }
                         chatmode = splitTag.val
                         console.log("================CHAT MODE CHANGED:", splitTag.val)
@@ -154,10 +159,19 @@ const Home = () => {
                 }
             }
 
+            if (showSpeak) {
+                let paragraphElement = document.createElement('p');
+                paragraphElement.classList.add('paraphThough');
+                paragraphElement.innerHTML = "De retour dans la discussion";
+                paragraphContainer.current.prepend(paragraphElement);
+
+                showSpeak = false;
+            }
+
             // Create paragraph element (initially hidden)
             let paragraphElement = document.createElement('p');
             paragraphElement.classList.add('discussion_text');
-            if(activeUser) {
+            if (activeUser) {
                 paragraphElement.classList.add('left');
             }
             paragraphElement.innerHTML = paragraphText;
@@ -188,8 +202,8 @@ const Home = () => {
                     choiceParagraphContainer.prepend(paragraphElement);
                 } */
 
-
-                if ("though" === chatmode) {
+                let boooool = false
+                if ("though" === chatmode && boooool) {
                     let random = Math.round(Math.random());
                     let time = base_timer;
 
@@ -328,15 +342,6 @@ const Home = () => {
                 paragraphContainer.current.prepend(paragraphElement);
 
                 showThough = false;
-            }
-
-            if (showSpeak) {
-                let paragraphElement = document.createElement('p');
-                paragraphElement.classList.add('paraphThough');
-                paragraphElement.innerHTML = "De retour dans la discussion";
-                paragraphContainer.current.prepend(paragraphElement);
-
-                showSpeak = false;
             }
 
             if (paused) {
@@ -604,7 +609,7 @@ const Home = () => {
                     </div>
                 </div>
                 {/* GAME */}
-                <div className={`step game ${4 === step ? 'show' : ''} ${"speak" === chatmode ? "speak-mode" : "though-mode"}`}>
+                <div className={`step game ${4 === step ? 'show' : ''} speak-mode`} ref={gameContainer}>
                     <img className="background" src={`img/bg_screen_2.png`} />
                     <div className="lovebar-container">
                         <p className="lovebar" style={{ height: `${life}%` }}></p>
