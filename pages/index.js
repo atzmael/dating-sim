@@ -445,7 +445,7 @@ export default function Home() {
                 <div className={`step game ${4 === step ? 'show' : ''}`}>
 
                     <div className="lovebar-container">
-                        <p className="lovebar" style={{ width: `${life}%` }}></p>
+                        <p className="lovebar" style={{ height: `${life}%` }}></p>
                     </div>
 
                     {/* DEBUG FEAT */}
