@@ -23,7 +23,8 @@ export default function Home() {
 
     const [life, setLife] = useState(base_life);
     const [tempLife, setTempLife] = useState(base_life);
-    const [currentActiveStory, setCurrentActiveStory] = useState(0)
+    const [currentActiveStory, setCurrentActiveStory] = useState(0);
+    const [step, setStep] = useState("GAME");
 
     // DOM elements // useRef
     const storyContainer = useRef(null);
@@ -301,6 +302,9 @@ export default function Home() {
         paused = false;
         continueStory();
     }
+    const handleSteps = () => {
+
+    }
 
     // INKY CONTROL STORY
 
@@ -381,22 +385,49 @@ export default function Home() {
             </Head>
 
             <main>
-                <h1>Dating Sim</h1>
+                <div className="content">
+                    {"INTRO" === step && // INTRO
+                        <div className="step homescreen">
+                            <h2>Papiloute</h2>
+                            <img src="" alt="Logo" />
+                            <p>Lorem ipsum area stabilis</p>
 
-                <input type="text" defaultValue="" onChange={(e) => handleUserName(e.currentTarget.value)} />
-                <input type="text" defaultValue="" onChange={(e) => handleHateName(e.currentTarget.value)} />
+                            <button className="btn_continue" onClick={handleContinueStory} ref={btnContinueStory}>Continue story</button>
+                        </div>
+                    }
+                    {"QUESTIONS" === step && // QUESTIONS
+                        <div className="step questions">
+                            <input type="text" defaultValue="" onChange={(e) => handleUserName(e.currentTarget.value)} />
+                            <input type="text" defaultValue="" onChange={(e) => handleHateName(e.currentTarget.value)} />
+                        </div>
+                    }
+                    {"INTRO_ONE" === step && // PART 1 INTRO
+                        <div className="step part1_intro">
 
-                <button onClick={beginStory}>Start</button>
+                        </div>
+                    }
+                    {"INTRO_TWO" === step && // PART 2 INTRO
+                        <div className="step part2_intro">
 
-                <button className="btn-continue" onClick={handleContinueStory} ref={btnContinueStory}>Continue story</button>
+                        </div>
+                    }
+                    {"GAME" === step && // GAME
+                        <div className="step game">
+                            <div className="lifebar-container">
+                                <p>Life: {life}%</p>
+                                <p className="lifebar" style={{ width: `${life}%` }}></p>
+                            </div>
 
-                <p>Life: {life}%</p>
-                <div className="lifebar-container">
-                    <p className="lifebar" style={{ width: `${life}%` }}></p>
-                </div>
+                            <div className="outerContainer" ref={outerScrollContainer}>
+                                <div id="story" ref={storyContainer}></div>
+                            </div>
+                        </div>
+                    }
+                    {"CONCLUSION" === step && // CONCLUSION
+                        <div className="step conclusion">
 
-                <div className="outerContainer" ref={outerScrollContainer}>
-                    <div id="story" ref={storyContainer}></div>
+                        </div>
+                    }
                 </div>
             </main>
         </div>
