@@ -9,11 +9,51 @@
 .step:not(.game) .content {
     background-color: #000;
     color: #fff;
-    
+
     width: 420px;
     height: 780px;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translateX(-50%) translateY(-50%);
+
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.step:not(.game) .content .title {
+    font-size: 32px;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+.step:not(.game) .content .text {
+    margin-top: 25px;
+    max-width: 310px;
+}
+.step:not(.game) .content .btn_continue {
+    position: absolute;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+
+/* QUESTIONS */
+.step.questions .content label {
+    max-width: 240px;
+}
+.step.questions .content .text {
+    margin-top: 60px;
+}
+.step.questions .content input {
+    margin-top: 5px;
+    background: none;
+    border: none;
+    border-bottom: solid 2px #fff;
+    outline: none;
+    color: #FFF;
+    font-size: 20px;
+    text-align: center;
 }
