@@ -22,11 +22,6 @@ export default function Home() {
     ]
     let currentStepIdent = 0;
 
-    let gameDatas = {
-        firstSubject: "",
-        secondSubject: ""
-    }
-
     // In lifecycle vars // useState
     const [stories, setStories] = useState([]);
 
@@ -87,7 +82,8 @@ export default function Home() {
                     }
 
                     if (splitTag && splitTag.property === "SUBJECT") {
-                        // gameDatas.firstSubject
+                        let second_choice = "DOG" === splitTag.val ? "JOB" : "DOG";
+                        setStoriesGlobalVars([{ label: "second_choice", value: second_choice }])
                     }
 
                     if (splitTag && splitTag.val === "END_STORY_ONE") {
@@ -337,7 +333,8 @@ export default function Home() {
     const setStoriesGlobalVars = (vars) => {
         stories.forEach(story => {
             vars.forEach(item => {
-                if (!!story.variablesState[item.label]) {
+                if (null !== story.variablesState[item.label]) {
+                    // console.log("Var updated:", item.label, item.value);
                     story.variablesState[item.label] = item.value
                 }
             })
