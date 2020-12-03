@@ -7,12 +7,20 @@ export default function Home() {
 
     // Static vars
     let globalTags = null;
-    let storyPath = "./story1";
+    let story1Path = "./story1";
+    let story2Path = "./story2";
+    let currentActiveStory = 0;
     let base_life = 100;
     let tempDelay = 0;
+    let paused = true;
+
+    let gameDatas = {
+        firstSubject: "",
+        secondSubject: ""
+    }
 
     // In lifecycle vars
-    const [story, setStory] = useState(null);
+    const [stories, setStories] = useState([]);
 
     const [life, setLife] = useState(base_life);
     const [tempLife, setTempLife] = useState(base_life);
@@ -22,10 +30,11 @@ export default function Home() {
     const outerScrollContainer = useRef(null);
     const inputName = useRef(null);
 
-    const continueStory = (firstTime = false) => {
-        let paragraphIndex = 0;
+    const continueStory = (storyIndex, firstTime = false) => {
         let delay = 200.0;
         let customClasses = [];
+        let story = stories[storyIndex];
+        console.log(storyIndex, stories);
 
         // Don't over-scroll past new content
         let previousBottomEdge = firstTime ? 0 : contentBottomEdgeY();
@@ -63,6 +72,12 @@ export default function Home() {
 
                     if (splitTag && splitTag.property === "DELAY") {
                         tempDelay = parseInt(splitTag.val) * 1000;
+                    }
+
+                    if(splitTag && splitTag.val === "END_STORY_ONE") {
+                        currentActiveStory = 1;
+                        paused = true;
+                        console.log("Pass to story 2")
                     }
 
                     // Basic usage
@@ -138,7 +153,7 @@ export default function Home() {
                         story.ChooseChoiceIndex(choice.index);
 
                         // Aaand loop
-                        continueStory();
+                        continueStory(currentActiveStory);
                     });
                 });
             }
@@ -152,9 +167,13 @@ export default function Home() {
                 scrollDown(previousBottomEdge);
             }
 
+            if(paused) {
+                return;
+            }
+
             setTimeout(() => {
                 console.log("Waited:", delay);
-                continueStory();
+                continueStory(currentActiveStory);
             }, delay);
         }
     }
@@ -251,35 +270,53 @@ export default function Home() {
 
     // Functions
 
-    const handleInputName = (val) => {
-        if (story) {
-            if (!!story.variablesState["user_name"]) {
-                story.variablesState["user_name"] = val;
-            }
+    const handleUserName = (val) => {
+        if (stories.length > 0) {
+            setStoriesGlobalVars([{ label: "user_name", value: val }])
+        }
+    }
+    const handleHateName = (val) => {
+        if (stories.length > 0) {
+            setStoriesGlobalVars([{ label: "hate_name", value: val }])
         }
     }
 
     const beginStory = () => {
         if (null !== story) {
-            console.log("== Setup and start story ==")
-            setTempLife(parseInt(story.variablesState["love_bar"]))
-            continueStory();
+            console.log("== Setup and start story ==");
+            paused = false;
+            setTempLife(parseInt(stories[0].variablesState["love_bar"]))
+            continueStory(currentActiveStory);
         }
     }
 
-    useEffect(() => {
-        fetch(`${storyPath}.json`)
-            .then(function (response) {
-                console.log("Story file found");
-                return response.text();
+    const setStoriesGlobalVars = (vars) => {
+        stories.forEach(story => {
+            vars.forEach(item => {
+                story.variablesState[item.label] = item.value
             })
-            .then(function (storyContent) {
-                console.log("Story file loaded");
-                let newStory = new inky.Story(storyContent);
-                globalTags = newStory.globalTags;
-                console.log("New ink story created and set")
-                setStory(newStory);
-            });
+        })
+    }
+
+    useEffect(() => {
+        let story1Promise = fetch(`${story1Path}.json`);
+        let story2Promise = fetch(`${story2Path}.json`);
+        Promise.all([story1Promise, story2Promise])
+            .then(responses => {
+                responses.forEach(res => {
+                    console.log("Story file found:", res.url);
+                    res.text()
+                        .then(content => {
+                            console.log("Story file loaded");
+                            let newStories = stories;
+                            let newStory = new inky.Story(content);
+                            newStories.push(newStory);
+                            // globalTags = newStory.globalTags;
+                            console.log("New ink story created and set");
+                            setStories(newStories);
+                        })
+                })
+            })
     }, [])
 
     useEffect(() => {
@@ -315,7 +352,8 @@ export default function Home() {
             <main>
                 <h1>Dating Sim</h1>
 
-                <input type="text" defaultValue="" onChange={(e) => handleInputName(e.currentTarget.value)} />
+                <input type="text" defaultValue="" onChange={(e) => handleUserName(e.currentTarget.value)} />
+                <input type="text" defaultValue="" onChange={(e) => handleHateName(e.currentTarget.value)} />
 
                 <button onClick={beginStory}>Start</button>
 
