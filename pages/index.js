@@ -22,7 +22,7 @@ export default function Home() {
     const outerScrollContainer = useRef(null);
     const inputName = useRef(null);
 
-    const continueStory = (firstTime) => {
+    const continueStory = (firstTime = false) => {
         let paragraphIndex = 0;
         let delay = 200.0;
         let customClasses = [];
