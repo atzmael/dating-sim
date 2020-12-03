@@ -125,9 +125,23 @@ const Home = () => {
                         let imageElement = document.createElement('img');
                         imageElement.classList.add('answer_illu')
                         imageElement.src = splitTag.val;
-
-                        imgRightContainer.current.prepend(imageElement);
-
+                        let randomX = Math.random() * 150;
+                        let randomY = Math.random() * (20 - (-20) + (-20));
+                        if(activeUser) {
+                            console.log(imgLeftContainer.current.childElementCount)
+                            if(imgLeftContainer.current.childElementCount === 3) {
+                                console.log("coucoucououcouco")
+                                imgLeftContainer.current.querySelector("img:first-child").remove()
+                            }
+                            imageElement.style.transform = `translate(${randomX}px, ${randomY}px)`
+                            imgLeftContainer.current.appendChild(imageElement);
+                        } else {
+                            if(imgRightContainer.childElementCount === 3) {
+                                imgRightContainer.current.querySelector("img:first-child").remove()
+                            }
+                            imageElement.style.transform = `translate(-${randomX}px, ${randomY}px)`
+                            imgRightContainer.current.appendChild(imageElement);
+                        }
                         showAfter(delay, imageElement);
                         delay += 200.0;
                     } else if (splitTag && splitTag.property == "CLASS") {
@@ -549,7 +563,11 @@ const Home = () => {
                         <div className={`name friend ${isIntro2 ? 'active' : ''}`}>{friend_name}</div>
                     </div>
 
-                    <div className="leftImages" ref={imgLeftContainer}></div>
+                    <div className="leftImages" ref={imgLeftContainer}>
+                        <img src="./img/chat/01_telepohne.png" class="answer_illu"/>
+                        <img src="./img/chat/02_sonnette.png" class="answer_illu"/>
+                        <img src="./img/chat/04_yeux.png" class="answer_illu"/>
+                    </div>
                     <div className="outerContainer" ref={outerScrollContainer}>
                         {/* <div className="gradient-top"></div> */}
                         <div id="story" ref={storyContainer}>
@@ -560,7 +578,11 @@ const Home = () => {
                         {/* DEBUG FEAT */}
                         {/* DEBUG FEAT */}
                     </div>
-                    <div className="rightImages" ref={imgRightContainer}></div>
+                    <div className="rightImages" ref={imgRightContainer}>
+                        <img src="./img/chat/01_telepohne.png" class="answer_illu"/>
+                        <img src="./img/chat/02_sonnette.png" class="answer_illu"/>
+                        <img src="./img/chat/03_yeux.png" class="answer_illu"/>
+                    </div>
                 </div>
                 {/* CONCLUSION */}
                 <div className={`step conclusion ${5 === step ? 'show' : ''}`}>

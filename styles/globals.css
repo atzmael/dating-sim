@@ -87,6 +87,37 @@ a {
   transform: translate(10px, 10px);
 }
 
+
+.rightImages,
+.leftImages {
+  height: 700px;
+  width: 500px;
+  overflow: hidden;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  /* pointer-events: none; */
+}
+.leftImages {
+  left: 10%;
+}
+
+.rightImages {
+  /* display:none; */
+  right: 0%;
+  width: 440px;
+}
+
+.rightImages > img,
+.leftImages > img {
+  display: block;
+}
+
+.rightImages >img:not(:first-child),
+.leftImages > img:not(:first-child) {
+  margin-top: 75px;
+}
+
 .discussion_text {
   float: right;
   transform: scaleY(-1);
