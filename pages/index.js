@@ -308,11 +308,6 @@ export default function Home() {
             setStoriesGlobalVars([{ label: "hate_name", value: val }])
         }
     }
-    const handleContinueStory = () => {
-        console.log("Click user continue story");
-        paused = false;
-        continueStory();
-    }
     const handleSteps = (e, type) => {
         let el = e.currentTarget.setAttribute('disabled', true);
         currentStepIdent = stepsIdent.indexOf(type)
@@ -321,6 +316,7 @@ export default function Home() {
             if (0 === currentActiveStory) {
                 beginStory();
             } else {
+                paused = false;
                 continueStory();
             }
         }
@@ -448,7 +444,7 @@ export default function Home() {
                         <input type="text" defaultValue="" onChange={(e) => handleUserName(e.currentTarget.value)} />
                         <input type="text" defaultValue="" onChange={(e) => handleHateName(e.currentTarget.value)} />
                         <button className="btn_start" onClick={beginStory}>Start</button>
-                        <button className="btn_continue" onClick={(e) => handleSteps(e, "INTRO_ONE")}>Continue story to story 2</button>
+                        <button className="btn_continue" onClick={(e) => handleSteps(e, "INTRO_TWO")}>Continue story to story 2</button>
 
                         <button className="btn_continue" onClick={(e) => handleSteps(e, "INTRO_TWO")}>Next</button>
                         {/* DEBUG FEAT */}
