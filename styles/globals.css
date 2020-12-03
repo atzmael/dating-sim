@@ -49,13 +49,6 @@ a {
   background-size: cover;
 }
 
-#story {
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: space-between;
-  height: 100%;
-}
-
 .outerContainer {
   width: 420px;
   height: 780px;
@@ -70,7 +63,7 @@ a {
   /* overflow: scroll; */
   display: flex;
   height: 100%;
-  flex-direction: column;
+  flex-flow: column nowrap;
   flex: auto;
   justify-content: space-between;
 }
@@ -95,24 +88,28 @@ a {
 }
 
 .discussion_text {
+  float: right;
   transform: scaleY(-1);
-  background-color: #e7f291;
+  background-color: transparent;
   border-radius: 15px;
   max-width: 100%;
   display: inline-block;
   padding: 16px 35px;
-  color: #3e00a4;
-  border-bottom-left-radius: 0;
+  border: #fdb572 2px solid;
+  color: #fdb572;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 15px;
 }
 .discussion_text:not(:last-child) {
   margin: 0 0 15px 0;
 }
-.discussion_text.right {
-  border: #fdb572 2px solid;
-  color: #fdb572;
-  background-color: transparent;
-  border-bottom-left-radius: 15px;
-  border-bottom-right-radius: 0;
+.discussion_text.left {
+  float: left;
+  color: #3e00a4;
+  border: none;
+  background-color: #e7f291;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 15px;
 }
 
 .paraphThough {
