@@ -459,7 +459,7 @@ export default function Home() {
 
                     <div className="outerContainer" ref={outerScrollContainer}>
                         <div id="story" ref={storyContainer}>
-                            <div class="paragraphContainer" ref={paragraphContainer}></div>
+                            <div className="paragraphContainer" ref={paragraphContainer}></div>
                         </div>
                     </div>
                 </div>
