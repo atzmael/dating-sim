@@ -38,6 +38,7 @@ export default function Home() {
     // DOM elements // useRef
     const storyContainer = useRef(null);
     const outerScrollContainer = useRef(null);
+    const paragraphContainer = useRef(null);
 
     const continueStory = (firstTime = false) => {
         let delay = 200.0;
@@ -101,7 +102,7 @@ export default function Home() {
                         let imageElement = document.createElement('img');
                         imageElement.classList.add('answer_illu')
                         imageElement.src = splitTag.val;
-                        storyContainer.current.appendChild(imageElement);
+                        paragraphContainer.current.appendChild(imageElement);
 
                         showAfter(delay, imageElement);
                         delay += 200.0;
@@ -126,7 +127,7 @@ export default function Home() {
             let paragraphElement = document.createElement('p');
             paragraphElement.classList.add('discussion_text');
             paragraphElement.innerHTML = paragraphText;
-            storyContainer.current.appendChild(paragraphElement);
+            paragraphContainer.current.prepend(paragraphElement);
 
             // Add any custom classes derived from ink tags
             for (let i = 0; i < customClasses.length; i++)
@@ -457,7 +458,9 @@ export default function Home() {
                     </div>
 
                     <div className="outerContainer" ref={outerScrollContainer}>
-                        <div id="story" ref={storyContainer}></div>
+                        <div id="story" ref={storyContainer}>
+                            <div class="paragraphContainer" ref={paragraphContainer}></div>
+                        </div>
                     </div>
                 </div>
                 {/* CONCLUSION */}

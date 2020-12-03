@@ -35,13 +35,22 @@ a {
 }
 
 .outerContainer > div:first-child {
-    max-height: 100%;
-    overflow: scroll;
+  /* overflow: scroll; */
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  flex: auto;
+  justify-content: space-between;
 }
 
+.paragraphContainer {
+    /* max-height: 100%; */
+    transform: scaleY(-1);
+    overflow: auto;
+}
 .choiceContainer {
-  position: absolute;
-  bottom: 0;
+  /* position: absolute;
+  bottom: 0; */
 }
 
 .answer_illu {
@@ -51,8 +60,8 @@ a {
     transform: translate(-240px, -100px);
 }
 
-.text_discussion {
-  color: black;
+.discussion_text {
+      transform: scaleY(-1);
 }
 
 .answer {
