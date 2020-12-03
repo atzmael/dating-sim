@@ -94,6 +94,7 @@ export default function Home() {
 
             // Create paragraph element (initially hidden)
             let paragraphElement = document.createElement('p');
+            paragraphElement.classList.add('discussion_text');
             paragraphElement.innerHTML = paragraphText;
             storyContainer.current.appendChild(paragraphElement);
 
