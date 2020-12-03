@@ -1,3 +1,19 @@
 .step {
+    display: none;
+}
+
+.step.show {
+    display: block;
+}
+
+.step:not(.game) .content {
+    background-color: #000;
+    color: #fff;
     
+    width: 420px;
+    height: 780px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
 }
