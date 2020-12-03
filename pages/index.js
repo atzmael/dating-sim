@@ -402,11 +402,11 @@ export default function Home() {
 
             <main>
                 {/* HOME */}
-                <div className={`step homescreen ${0 === step ? 'show' : ''}`}>
+                <div className={`step home ${0 === step ? 'show' : ''}`}>
                     <div className="content">
-                        <h2>Papiloute</h2>
+                        <h2 className="title">Papiloute</h2>
                         <img src="" alt="Logo" />
-                        <p>Lorem ipsum area stabilis</p>
+                        <p className="text">Lorem ipsum area stabilis</p>
 
                         <button className="btn_continue" onClick={(e) => handleSteps(e, "QUESTIONS")}>Next</button>
                     </div>
@@ -414,26 +414,32 @@ export default function Home() {
                 {/* QUESTIONS */}
                 <div className={`step questions ${1 === step ? 'show' : ''}`}>
                     <div className="content">
-                        <input type="text" defaultValue="" onChange={(e) => handleUserName(e.currentTarget.value)} />
-                        <input type="text" defaultValue="" onChange={(e) => handleHateName(e.currentTarget.value)} />
-
+                        <h3 className="title">Petites questions</h3>
+                        <label htmlFor="username">
+                            <p className="text">Ton prénom:</p>
+                            <input name="username" type="text" defaultValue="" onChange={(e) => handleUserName(e.currentTarget.value)} autoComplete="off" />
+                        </label>
+                        <label htmlFor="hatename">
+                            <p className="text">Le prénom d'une personne que tu détestes:</p>
+                            <input name="hatename" type="text" defaultValue="" onChange={(e) => handleHateName(e.currentTarget.value)} autoComplete="off" />
+                        </label>
                         <button className="btn_continue" onClick={(e) => handleSteps(e, "INTRO_ONE")}>Next</button>
                     </div>
                 </div>
                 {/* PART 1 INTRO */}
                 <div className={`step part_one ${2 === step ? 'show' : ''}`}>
                     <div className="content">
-                        <h3>1. La nouvelle</h3>
-                        <p>Sam et toi échangez par messages depuis quelques semaines.<br /><br />
+                        <h3 className="title">1. La nouvelle</h3>
+                        <p className="text">Sam et toi échangez par messages depuis quelques semaines.<br /><br />
                         Vous ne vous êtes pas encore rencontré.e.s mais commencez à bien vous connaitre.</p>
-                        <button className="btn_start" onClick={(e) => handleSteps(e, "GAME")}>START</button>
+                        <button className="btn_continue" onClick={(e) => handleSteps(e, "GAME")}>START</button>
                     </div>
                 </div>
                 {/* PART 2 INTRO */}
                 <div className={`step part_two ${3 === step ? 'show' : ''}`}>
                     <div className="content">
-                        <h3>2. La nouvelle</h3>
-                        <p>Sam et toi échangez par messages depuis quelques semaines.<br /><br />
+                        <h3 className="title">2. La nouvelle</h3>
+                        <p className="text">Sam et toi échangez par messages depuis quelques semaines.<br /><br />
                         Vous ne vous êtes pas encore rencontré.e.s mais commencez à bien vous connaitre.</p>
                         <button className="btn_continue" onClick={(e) => handleSteps(e, "GAME")}>Next</button>
                     </div>
@@ -463,8 +469,9 @@ export default function Home() {
                 </div>
                 {/* CONCLUSION */}
                 <div className={`step conclusion ${5 === step ? 'show' : ''}`}>
-                    <div className="content"></div>
-                    <button className="btn_continue" onClick={(e) => handleSteps(e, "QUESTIONS")}>Restart</button>
+                    <div className="content">
+                        <button className="btn_continue" onClick={(e) => handleSteps(e, "QUESTIONS")}>Restart</button>
+                    </div>
                 </div>
             </main>
         </div>
