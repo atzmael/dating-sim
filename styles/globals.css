@@ -203,6 +203,11 @@ a {
   right: 60px;
   transform: translateY(-50%);
   box-sizing: content-box;
+  opacity: 0;
+}
+
+.timer-container.show {
+  opacity: 1;
 }
 .timer {
   height: 100%;
