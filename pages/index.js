@@ -12,6 +12,15 @@ export default function Home() {
     let base_life = 100;
     let tempDelay = 0;
     let paused = true;
+    let stepsIdent = [
+        "HOME",
+        "QUESTIONS",
+        "INTRO_ONE",
+        "INTRO_TWO",
+        "GAME",
+        "CONCLUSION"
+    ]
+    let currentStepIdent = 0;
 
     let gameDatas = {
         firstSubject: "",
@@ -24,12 +33,11 @@ export default function Home() {
     const [life, setLife] = useState(base_life);
     const [tempLife, setTempLife] = useState(base_life);
     const [currentActiveStory, setCurrentActiveStory] = useState(0);
-    const [step, setStep] = useState("GAME");
+    const [step, setStep] = useState(0);
 
     // DOM elements // useRef
     const storyContainer = useRef(null);
     const outerScrollContainer = useRef(null);
-    const btnContinueStory = useRef(null);
     const paragraphContainer = useRef(null);
 
     const continueStory = (firstTime = false) => {
@@ -39,11 +47,12 @@ export default function Home() {
 
         console.log(currentActiveStory, story);
 
-        // Don't over-scroll past new content
-        let previousBottomEdge = firstTime ? 0 : contentBottomEdgeY();
+        /* // Don't over-scroll past new content
+        let previousBottomEdge = firstTime ? 0 : contentBottomEdgeY(); */
 
         if (story.canContinue) {
             console.log("=====Story can continue=====");
+
             //console.log(story);
 
             let paragraphText = removeNamePrefix(story.Continue());
@@ -114,7 +123,6 @@ export default function Home() {
                 }
             }
 
-
             // Create paragraph element (initially hidden)
             let paragraphElement = document.createElement('p');
             paragraphElement.classList.add('discussion_text');
@@ -128,7 +136,6 @@ export default function Home() {
             // Fade in paragraph after a short delay
             showAfter(delay, paragraphElement);
             delay += 200.0;
-
 
             if (tempDelay !== 0) {
                 delay = tempDelay;
@@ -171,14 +178,14 @@ export default function Home() {
                 storyContainer.current.appendChild(choiceParagraphContainer);
             }
 
-            // Extend height to fit
+            /* // Extend height to fit
             // We do this manually so that removing elements and creating new ones doesn't
             // cause the height (and therefore scroll) to jump backwards temporarily.
            //storyContainer.current.style.height = contentBottomEdgeY() + "px";
 
             if (!firstTime) {
                 scrollDown(previousBottomEdge);
-            }
+            } */
 
             if (paused) {
                 return;
@@ -211,7 +218,7 @@ export default function Home() {
 
     // Scrolls the page down, but no further than the bottom edge of what you could
     // see previously, so it doesn't go too far.
-    const scrollDown = (previousBottomEdge) => {
+    /* const scrollDown = (previousBottomEdge) => {
 
         // Line up top of screen with the bottom of where the previous content ended
         let target = previousBottomEdge;
@@ -240,7 +247,7 @@ export default function Home() {
     const contentBottomEdgeY = () => {
         let bottomElement = storyContainer.current.lastElementChild;
         return bottomElement ? bottomElement.offsetTop + bottomElement.offsetHeight : 0;
-    }
+    } */
 
     // Remove all elements that match the given selector. Used for removing choices after
     // you've picked one, as well as for the CLEAR and RESTART tags.
@@ -302,19 +309,24 @@ export default function Home() {
             setStoriesGlobalVars([{ label: "hate_name", value: val }])
         }
     }
-    const handleContinueStory = () => {
-        console.log("Click user continue story");
-        paused = false;
-        continueStory();
-    }
-    const handleSteps = () => {
-
+    const handleSteps = (e, type) => {
+        let el = e.currentTarget.setAttribute('disabled', true);
+        currentStepIdent = stepsIdent.indexOf(type)
+        setStep(currentStepIdent);
+        if ("GAME" === type) {
+            if (0 === currentActiveStory) {
+                beginStory();
+            } else {
+                paused = false;
+                continueStory();
+            }
+        }
     }
 
     // INKY CONTROL STORY
 
     const beginStory = () => {
-        if (null !== story) {
+        if (null !== stories.length) {
             console.log("== Setup and start story ==");
             paused = false;
             setTempLife(parseInt(stories[0].variablesState["love_bar"]))
@@ -325,7 +337,9 @@ export default function Home() {
     const setStoriesGlobalVars = (vars) => {
         stories.forEach(story => {
             vars.forEach(item => {
-                story.variablesState[item.label] = item.value
+                if (!!story.variablesState[item.label]) {
+                    story.variablesState[item.label] = item.value
+                }
             })
         })
     }
@@ -377,12 +391,6 @@ export default function Home() {
         }
     }, [tempLife])
 
-    useEffect(() => {
-        if (0 !== currentActiveStory && null !== btnContinueStory.current) {
-            btnContinueStory.current.classList.add("show");
-        }
-    }, [currentActiveStory])
-
     return (
         <div>
             <Head>
@@ -390,59 +398,69 @@ export default function Home() {
             </Head>
 
             <main>
-                <div className="content">
-                    {"INTRO" === step && // INTRO
-                        <div className="step homescreen">
-                            <h2>Papiloute</h2>
-                            <img src="" alt="Logo" />
-                            <p>Lorem ipsum area stabilis</p>
+                {/* HOME */}
+                <div className={`step homescreen ${0 === step ? 'show' : ''}`}>
+                    <div className="content">
+                        <h2>Papiloute</h2>
+                        <img src="" alt="Logo" />
+                        <p>Lorem ipsum area stabilis</p>
 
-                            <button className="btn_continue" onClick={handleContinueStory} ref={btnContinueStory}>Continue story</button>
+                        <button className="btn_continue" onClick={(e) => handleSteps(e, "QUESTIONS")}>Next</button>
+                    </div>
+                </div>
+                {/* QUESTIONS */}
+                <div className={`step questions ${1 === step ? 'show' : ''}`}>
+                    <div className="content">
+                        <input type="text" defaultValue="" onChange={(e) => handleUserName(e.currentTarget.value)} />
+                        <input type="text" defaultValue="" onChange={(e) => handleHateName(e.currentTarget.value)} />
+
+                        <button className="btn_continue" onClick={(e) => handleSteps(e, "INTRO_ONE")}>Next</button>
+                    </div>
+                </div>
+                {/* PART 1 INTRO */}
+                <div className={`step part_one ${2 === step ? 'show' : ''}`}>
+                    <div className="content">
+                        <h3>1. La nouvelle</h3>
+                        <p>Sam et toi échangez par messages depuis quelques semaines.<br /><br />
+                        Vous ne vous êtes pas encore rencontré.e.s mais commencez à bien vous connaitre.</p>
+                        <button className="btn_start" onClick={(e) => handleSteps(e, "GAME")}>START</button>
+                    </div>
+                </div>
+                {/* PART 2 INTRO */}
+                <div className={`step part_two ${3 === step ? 'show' : ''}`}>
+                    <div className="content">
+                        <h3>2. La nouvelle</h3>
+                        <p>Sam et toi échangez par messages depuis quelques semaines.<br /><br />
+                        Vous ne vous êtes pas encore rencontré.e.s mais commencez à bien vous connaitre.</p>
+                        <button className="btn_continue" onClick={(e) => handleSteps(e, "GAME")}>Next</button>
+                    </div>
+                </div>
+                {/* GAME */}
+                <div className={`step game ${4 === step ? 'show' : ''}`}>
+                    <div className="lifebar-container">
+                        <p>Life: {life}%</p>
+                        <p className="lifebar" style={{ width: `${life}%` }}></p>
+
+                        {/* DEBUG FEAT */}
+                        <input type="text" defaultValue="" onChange={(e) => handleUserName(e.currentTarget.value)} />
+                        <input type="text" defaultValue="" onChange={(e) => handleHateName(e.currentTarget.value)} />
+                        <button className="btn_start" onClick={beginStory}>Start</button>
+                        <button className="btn_continue" onClick={(e) => handleSteps(e, "INTRO_TWO")}>Continue story to story 2</button>
+
+                        <button className="btn_continue" onClick={(e) => handleSteps(e, "INTRO_TWO")}>Next</button>
+                        {/* DEBUG FEAT */}
+                    </div>
+
+                    <div className="outerContainer" ref={outerScrollContainer}>
+                        <div id="story" ref={storyContainer}>
+                            <div class="paragraphContainer" ref={paragraphContainer}></div>
                         </div>
-                    }
-                    {"QUESTIONS" === step && // QUESTIONS
-                        <div className="step questions">
-                            <input type="text" defaultValue="" onChange={(e) => handleUserName(e.currentTarget.value)} />
-                            <input type="text" defaultValue="" onChange={(e) => handleHateName(e.currentTarget.value)} />
-                        </div>
-                    }
-                    {"INTRO_ONE" === step && // PART 1 INTRO
-                        <div className="step part1_intro">
-
-                        </div>
-                    }
-                    {"INTRO_TWO" === step && // PART 2 INTRO
-                        <div className="step part2_intro">
-
-                        </div>
-                    }
-                    {"GAME" === step && // GAME
-                        <div className="step game">
-                            <div className="lifebar-container">
-                                <p>Life: {life}%</p>
-                                <p className="lifebar" style={{ width: `${life}%` }}></p>
-
-                                {/* TEMPORAIRE */}
-                                <input type="text" defaultValue="" onChange={(e) => handleUserName(e.currentTarget.value)} />
-                                <input type="text" defaultValue="" onChange={(e) => handleHateName(e.currentTarget.value)} />
-                                <button className="btn_start" onClick={beginStory}>Start</button>
-
-                                <button className="btn_continue" onClick={handleContinueStory} ref={btnContinueStory}>Continue story</button>
-                                {/* TEMPORAIRE */}
-                            </div>
-
-                            <div className="outerContainer" ref={outerScrollContainer}>
-                                <div id="story" ref={storyContainer}>
-                                    <div class="paragraphContainer" ref={paragraphContainer}></div>
-                                </div>
-                            </div>
-                        </div>
-                    }
-                    {"CONCLUSION" === step && // CONCLUSION
-                        <div className="step conclusion">
-
-                        </div>
-                    }
+                    </div>
+                </div>
+                {/* CONCLUSION */}
+                <div className={`step conclusion ${5 === step ? 'show' : ''}`}>
+                    <div className="content"></div>
+                    <button className="btn_continue" onClick={(e) => handleSteps(e, "QUESTIONS")}>Restart</button>
                 </div>
             </main>
         </div>
