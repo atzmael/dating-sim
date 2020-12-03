@@ -7,7 +7,6 @@
 }
 
 .step:not(.game) .content {
-    background-color: #000;
     color: #fff;
 
     width: 420px;
@@ -39,6 +38,34 @@
     bottom: 60px;
     left: 50%;
     transform: translateX(-50%);
+    width: 60px;
+    height: 30px;
+}
+.step:not(.game):not(.home) .content .btn_continue {
+    bottom: 40px;
+}
+.step:not(.game) .content .btn_start {
+    margin-top: 23px;
+    cursor: pointer;
+}
+.step .content .btn_continue {
+    cursor: pointer;
+}
+
+/* HOME */
+.step.home .logo {
+    width: 240px;
+    height: 240px;
+}
+.step.home .user-control-container {
+    position: absolute;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+.step.home .user-control-container .user-text-tip {
+    font-weight: 600;
+    color: #3e00a4;
 }
 
 /* QUESTIONS */
@@ -52,15 +79,40 @@
     margin-top: 5px;
     background: none;
     border: none;
-    border-bottom: solid 2px #fff;
+    border: solid 2px #fff;
+    border-radius: 15px;
     outline: none;
     color: #fff;
-    font-size: 20px;
+    font-size: 24px;
+    padding: 8px 0;
     text-align: center;
+    text-transform: uppercase;
+    width: 100%;
 }
 
 @media screen and (max-width: 767px) {
     .step.game :not(.outerContainer) {
         display: none;
     }
+}
+
+.step.game .gradient-top {
+    background: linear-gradient(#3e00a4 0%, transparent 100%);
+    position: absolute;
+    z-index: 10;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 150px;
+}
+
+.step .background {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 628px;
+    max-width: 100vw;
+    height: 974px;
+    max-height: 100vh;
 }

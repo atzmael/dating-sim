@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@400;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@400;500;600&display=swap");
 
 html,
 body {
@@ -7,6 +7,17 @@ body {
   font-family: "Barlow Semi Condensed", Arial, Helvetica Neue, sans-serif;
   font-size: 20px;
   font-weight: 400;
+}
+
+main {
+  width: 100vw;
+  height: 100vh;
+}
+
+button {
+  background: none;
+  outline: none;
+  border: none;
 }
 
 a {
@@ -24,6 +35,27 @@ a {
   transition: opacity 0.2s ease;
 }
 
+.story-one {
+  background-image: url("../public/img/background_one.jpg");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.story-two {
+  background-image: url("../public/img/background_two.jpg");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+#story {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-between;
+  height: 100%;
+}
+
 .outerContainer {
   width: 420px;
   height: 780px;
@@ -31,7 +63,6 @@ a {
   top: 50%;
   left: 50%;
   transform: translateX(-50%) translateY(-50%);
-  background-color: black;
   padding: 15px;
 }
 
@@ -52,8 +83,10 @@ a {
 .choiceContainer {
   /* position: absolute;
   bottom: 0; */
-  border-top: 2px solid #c4c4c4;
-  padding-top: 28px;
+  padding-top: 30px;
+  margin-top: 30px;
+  border-top: 2px solid rgba(255,255,255,0.5);
+  height: 310px;
 }
 
 .answer_illu {
@@ -63,31 +96,52 @@ a {
 
 .discussion_text {
   transform: scaleY(-1);
-  background-color: #c4c4c4;
+  background-color: #e7f291;
+  border-radius: 15px;
   max-width: 100%;
   display: inline-block;
   padding: 16px 35px;
+  color: #3e00a4;
+  border-bottom-left-radius: 0;
 }
 .discussion_text:not(:last-child) {
   margin: 0 0 15px 0;
 }
 .discussion_text.right {
-  background-color: white;
+  border: #fdb572 2px solid;
+  color: #fdb572;
+  background-color: transparent;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 0;
 }
 
 .choice {
   margin: 0;
 }
-.choice:not(:last-child) {
-  margin-bottom: 15px;
+.choice:first-child .answer {
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
 }
+.choice:last-child .answer {
+  border-bottom-right-radius: 15px;
+}
+.story-two .choice:last-child .answer {
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 0;
+}
+.choice:not(:first-child) .answer {
+  border-top: none;
+}
+
 .answer {
   background: none;
   border: none;
   outline: none;
   cursor: pointer;
-  background-color: #c4c4c4;
-  transition: background-color 0.4s ease;
+  background-color: transparent;
+  border: 2px solid white;
+  color: white;
+  transition: background-color 0.3s ease, color 0.3s ease;
   width: 100%;
   padding: 18px;
   font-size: 20px;
@@ -95,6 +149,7 @@ a {
 
 .answer:hover {
   background-color: #ffffff;
+  color: black;
 }
 
 .hide {
@@ -131,7 +186,90 @@ a {
   transform: translateY(100%);
 }
 
-.btn-continue {
-  opacity: 0;
-  transition: opacity 0.4s ease;
+.timer-container {
+  height: 360px;
+  width: 30px;
+  background-color: white;
+  border: 2px solid black;
+  position: absolute;
+  top: calc(50% - 30px);
+  right: 60px;
+  transform: translateY(-50%);
+  box-sizing: content-box;
+}
+.timer {
+  height: 100%;
+  width: 30px;
+  background-color: black;
+  margin: 0;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+}
+
+.players {
+  position: absolute;
+  bottom: 0;
+  font-size: 32px;
+  font-weight: 500;
+  text-align: center;
+  width: 100%;
+}
+
+.players .name.active::before {
+  content: "Tu joues";
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-100%);
+  color: #e7f297;
+  text-transform: none;
+}
+
+.players .user,
+.players .friend {
+  background-color: #3e00a4;
+}
+
+.players .user {
+  text-transform: uppercase;
+  position: absolute;
+  width: 240px;
+  padding: 25px 0;
+  bottom: 0;
+  left: 120px;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  color: #e7f297;
+}
+.players .user.active::before {
+  content: "Tu joues";
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-100%);
+  color: #e7f297;
+  text-transform: none;
+}
+
+.players .user.active {
+  background-color: #e7f297;
+  color: #3e00a4;
+}
+
+.players .friend {
+  text-transform: uppercase;
+  position: absolute;
+  width: 240px;
+  padding: 25px 0;
+  bottom: 0;
+  right: 120px;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  color: #fdb572;
+}
+
+.players .friend.active {
+  background-color: #fdb572;
+  color: #3e00a4;
 }

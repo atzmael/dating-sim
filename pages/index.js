@@ -12,6 +12,7 @@ export default function Home() {
     let base_life = 100;
     let tempDelay = 0;
     let paused = true;
+    let friend_name = "Sam";
     let stepsIdent = [
         "HOME",
         "QUESTIONS",
@@ -26,9 +27,12 @@ export default function Home() {
     const [stories, setStories] = useState([]);
 
     const [life, setLife] = useState(base_life);
+    const [timer, setTimer] = useState(10);
     const [tempLife, setTempLife] = useState(base_life);
     const [currentActiveStory, setCurrentActiveStory] = useState(0);
     const [step, setStep] = useState(0);
+    const [username, setUsername] = useState("Camille");
+    const [isIntro2, setIsIntro2] = useState(false);
 
     // DOM elements // useRef
     const storyContainer = useRef(null);
@@ -301,6 +305,7 @@ export default function Home() {
     const handleUserName = (val) => {
         if (stories.length > 0) {
             setStoriesGlobalVars([{ label: "user_name", value: val }])
+            setUsername(val);
         }
     }
     const handleHateName = (val) => {
@@ -319,6 +324,8 @@ export default function Home() {
                 paused = false;
                 continueStory();
             }
+        } else if ("INTRO_TWO" === type) {
+            setIsIntro2(true);
         }
     }
 
@@ -397,73 +404,87 @@ export default function Home() {
                 <title>Dating Sim</title>
             </Head>
 
-            <main>
+            <main className={!isIntro2 ? 'story-one' : 'story-two'}>
                 {/* HOME */}
                 <div className={`step home ${0 === step ? 'show' : ''}`}>
+                    <img className="background" src={`img/bg_screen_1.png`} />
                     <div className="content">
-                        <h2 className="title">Papiloute</h2>
-                        <img src="" alt="Logo" />
-                        <p className="text">Lorem ipsum area stabilis</p>
+                        <img className="logo" src="img/logo.png" alt="Logo montrant papilou, le chien" />
 
-                        <button className="btn_continue" onClick={(e) => handleSteps(e, "QUESTIONS")}>Next</button>
+                        <div className="user-control-container">
+                            <div className="user-text-tip">clique pour commencer</div>
+                            <button className="btn_start" onClick={(e) => handleSteps(e, "QUESTIONS")}><img src="img/btn-continue.png" /></button>
+                        </div>
                     </div>
                 </div>
                 {/* QUESTIONS */}
                 <div className={`step questions ${1 === step ? 'show' : ''}`}>
+                    <img className="background" src={`img/bg_screen_2.png`} />
                     <div className="content">
-                        <h3 className="title">Petites questions</h3>
+                        <h3 className="title">Deux petites questions</h3>
                         <label htmlFor="username">
-                            <p className="text">Ton prénom:</p>
+                            <p className="text">Quel est ton prénom ?</p>
                             <input name="username" type="text" defaultValue="" onChange={(e) => handleUserName(e.currentTarget.value)} autoComplete="off" />
                         </label>
                         <label htmlFor="hatename">
-                            <p className="text">Le prénom d'une personne que tu détestes:</p>
+                            <p className="text">Et le prénom d’une personne que tu détestes ?</p>
                             <input name="hatename" type="text" defaultValue="" onChange={(e) => handleHateName(e.currentTarget.value)} autoComplete="off" />
                         </label>
-                        <button className="btn_continue" onClick={(e) => handleSteps(e, "INTRO_ONE")}>Next</button>
+                        <button className="btn_continue" onClick={(e) => handleSteps(e, "INTRO_ONE")}><img src="img/btn-continue.png" /></button>
                     </div>
                 </div>
                 {/* PART 1 INTRO */}
                 <div className={`step part_one ${2 === step ? 'show' : ''}`}>
+                    <img className="background" src={`img/bg_screen_2.png`} />
                     <div className="content">
                         <h3 className="title">1. La nouvelle</h3>
                         <p className="text">Sam et toi échangez par messages depuis quelques semaines.<br /><br />
                         Vous ne vous êtes pas encore rencontré.e.s mais commencez à bien vous connaitre.</p>
-                        <button className="btn_continue" onClick={(e) => handleSteps(e, "GAME")}>START</button>
+                        <button className="btn_continue" onClick={(e) => handleSteps(e, "GAME")}><img src="img/btn-continue.png" /></button>
                     </div>
                 </div>
                 {/* PART 2 INTRO */}
                 <div className={`step part_two ${3 === step ? 'show' : ''}`}>
+                    <img className="background" src={`img/bg_screen_2.png`} />
                     <div className="content">
                         <h3 className="title">2. La nouvelle</h3>
                         <p className="text">Sam et toi échangez par messages depuis quelques semaines.<br /><br />
                         Vous ne vous êtes pas encore rencontré.e.s mais commencez à bien vous connaitre.</p>
-                        <button className="btn_continue" onClick={(e) => handleSteps(e, "GAME")}>Next</button>
+                        <button className="btn_continue" onClick={(e) => handleSteps(e, "GAME")}><img src="img/btn-continue.png" /></button>
                     </div>
                 </div>
                 {/* GAME */}
                 <div className={`step game ${4 === step ? 'show' : ''}`}>
-
+                    <img className="background" src={`img/bg_screen_2.png`} />
                     <div className="lovebar-container">
                         <p className="lovebar" style={{ height: `${life}%` }}></p>
                     </div>
+                    <div className="timer-container">
+                        <p className="timer" style={{ height: `${timer * 10}%` }}></p>
+                    </div>
 
-                    {/* DEBUG FEAT */}
-                    <button className="btn_continue" onClick={(e) => handleSteps(e, "INTRO_TWO")}>Next</button>
-                    {/* DEBUG FEAT */}
+                    <div className="players">
+                        <div className={`name user ${!isIntro2 ? 'active' : ''}`}>{username}</div>
+                        <div className={`name friend ${isIntro2 ? 'active' : ''}`}>{friend_name}</div>
+                    </div>
 
                     <div className="leftImages" ref={imgLeftContainer}></div>
                     <div className="outerContainer" ref={outerScrollContainer}>
+                        {/* <div className="gradient-top"></div> */}
                         <div id="story" ref={storyContainer}>
                             <div className="paragraphContainer" ref={paragraphContainer}></div>
                         </div>
+                        {/* DEBUG FEAT */}
+                        <button className="btn_continue" onClick={(e) => handleSteps(e, !isIntro2 ? "INTRO_TWO" : "CONCLUSION")}><img src="img/btn-continue.png" /></button>
+                        {/* DEBUG FEAT */}
                     </div>
                     <div className="rightImages" ref={imgRightContainer}></div>
                 </div>
                 {/* CONCLUSION */}
                 <div className={`step conclusion ${5 === step ? 'show' : ''}`}>
+                    <img className="background" src={`img/bg_screen_2.png`} />
                     <div className="content">
-                        <button className="btn_continue" onClick={(e) => handleSteps(e, "QUESTIONS")}>Restart</button>
+                        <button className="btn_continue" onClick={(e) => handleSteps(e, "HOME")}><img src="img/btn-continue.png" /></button>
                     </div>
                 </div>
             </main>
