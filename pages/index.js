@@ -76,6 +76,10 @@ export default function Home() {
                         tempDelay = parseInt(splitTag.val) * 1000;
                     }
 
+                    if (splitTag && splitTag.property === "SUBJECT") {
+                        // gameDatas.firstSubject
+                    }
+
                     if (splitTag && splitTag.val === "END_STORY_ONE") {
                         setCurrentActiveStory(1);
                         paused = true;
@@ -416,6 +420,14 @@ export default function Home() {
                             <div className="lifebar-container">
                                 <p>Life: {life}%</p>
                                 <p className="lifebar" style={{ width: `${life}%` }}></p>
+
+                                {/* TEMPORAIRE */}
+                                <input type="text" defaultValue="" onChange={(e) => handleUserName(e.currentTarget.value)} />
+                                <input type="text" defaultValue="" onChange={(e) => handleHateName(e.currentTarget.value)} />
+                                <button className="btn_start" onClick={beginStory}>Start</button>
+
+                                <button className="btn_continue" onClick={handleContinueStory} ref={btnContinueStory}>Continue story</button>
+                                {/* TEMPORAIRE */}
                             </div>
 
                             <div className="outerContainer" ref={outerScrollContainer}>
