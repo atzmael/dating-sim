@@ -129,13 +129,16 @@ export default function Home() {
 
             if (choices.length > 0) {
 
+                let choiceParagraphContainer = document.createElement('div');
+                choiceParagraphContainer.classList.add('choiceContainer')
                 story.currentChoices.forEach(function (choice) {
 
                     // Create paragraph with anchor element
+
                     let choiceParagraphElement = document.createElement('p');
                     choiceParagraphElement.classList.add("choice");
                     choiceParagraphElement.innerHTML = `<button class="answer"><span>${choice.text}</span></button>`
-                    storyContainer.current.appendChild(choiceParagraphElement);
+                    choiceParagraphContainer.appendChild(choiceParagraphElement)
 
                     // Fade choice in after a short delay
                     showAfter(delay, choiceParagraphElement);
@@ -148,6 +151,7 @@ export default function Home() {
 
                         // Remove all existing choices
                         removeAll("p.choice");
+                        removeAll("div.choiceContainer");
 
                         // Tell the story where to go next
                         story.ChooseChoiceIndex(choice.index);
@@ -156,6 +160,7 @@ export default function Home() {
                         continueStory(currentActiveStory);
                     });
                 });
+                storyContainer.current.appendChild(choiceParagraphContainer);
             }
 
             // Extend height to fit
