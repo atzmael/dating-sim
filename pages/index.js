@@ -85,6 +85,7 @@ export default function Home() {
                     // IMAGE: src
                     if (splitTag && splitTag.property == "IMAGE") {
                         let imageElement = document.createElement('img');
+                        imageElement.classList.add('answer_illu')
                         imageElement.src = splitTag.val;
                         storyContainer.current.appendChild(imageElement);
 
@@ -130,13 +131,16 @@ export default function Home() {
 
             if (choices.length > 0) {
 
+                let choiceParagraphContainer = document.createElement('div');
+                choiceParagraphContainer.classList.add('choiceContainer')
                 story.currentChoices.forEach(function (choice) {
 
                     // Create paragraph with anchor element
+
                     let choiceParagraphElement = document.createElement('p');
                     choiceParagraphElement.classList.add("choice");
                     choiceParagraphElement.innerHTML = `<button class="answer"><span>${removeNamePrefix(choice.text)}</span></button>`
-                    storyContainer.current.appendChild(choiceParagraphElement);
+                    choiceParagraphContainer.appendChild(choiceParagraphElement)
 
                     // Fade choice in after a short delay
                     showAfter(delay, choiceParagraphElement);
@@ -149,6 +153,7 @@ export default function Home() {
 
                         // Remove all existing choices
                         removeAll("p.choice");
+                        removeAll("div.choiceContainer");
 
                         // Tell the story where to go next
                         story.ChooseChoiceIndex(choice.index);
@@ -157,6 +162,7 @@ export default function Home() {
                         continueStory();
                     });
                 });
+                storyContainer.current.appendChild(choiceParagraphContainer);
             }
 
             // Extend height to fit
@@ -270,7 +276,7 @@ export default function Home() {
     }
 
     const removeNamePrefix = (string) => {
-        let output = "";
+        let output = string;
         let index = string.indexOf("-");
         if (-1 !== index) {
             output = string.slice(1);

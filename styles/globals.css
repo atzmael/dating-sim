@@ -22,17 +22,26 @@ a {
 }
 
 .outerContainer {
-  width: 360px;
+  width: 420px;
+  height: 780px;
   position: absolute;
-  height: 100%;
-  top: 0;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%) translateY(-50%);
+  background-color: red;
 }
 
-/* .outerContainer > div:first-child {
+.choiceContainer {
+  position: absolute;
+  bottom: 0;
+}
 
-} */
+.answer_illu {
+    width: 150px;
+    position: absolute;
+    /* left: -290px; */
+    transform: translate(-240px, -100px);
+}
 
 .text_discussion {
   color: black;
