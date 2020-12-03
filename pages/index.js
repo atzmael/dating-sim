@@ -9,7 +9,6 @@ export default function Home() {
     let globalTags = null;
     let story1Path = "./story1";
     let story2Path = "./story2";
-    let currentActiveStory = 0;
     let base_life = 100;
     let tempDelay = 0;
     let paused = true;
@@ -19,31 +18,33 @@ export default function Home() {
         secondSubject: ""
     }
 
-    // In lifecycle vars
+    // In lifecycle vars // useState
     const [stories, setStories] = useState([]);
 
     const [life, setLife] = useState(base_life);
     const [tempLife, setTempLife] = useState(base_life);
+    const [currentActiveStory, setCurrentActiveStory] = useState(0)
 
-    // DOM elements
+    // DOM elements // useRef
     const storyContainer = useRef(null);
     const outerScrollContainer = useRef(null);
-    const inputName = useRef(null);
+    const btnContinueStory = useRef(null);
 
-    const continueStory = (storyIndex, firstTime = false) => {
+    const continueStory = (firstTime = false) => {
         let delay = 200.0;
         let customClasses = [];
-        let story = stories[storyIndex];
-        console.log(storyIndex, stories);
+        let story = stories[currentActiveStory];
+
+        console.log(currentActiveStory, story);
 
         // Don't over-scroll past new content
         let previousBottomEdge = firstTime ? 0 : contentBottomEdgeY();
 
         if (story.canContinue) {
-            console.log("===Story can continue===");
-            console.log(story);
+            console.log("=====Story can continue=====");
+            //console.log(story);
 
-            let paragraphText = story.Continue();
+            let paragraphText = removeNamePrefix(story.Continue());
             let tags = story.currentTags;
             let choices = story.currentChoices;
 
@@ -74,10 +75,10 @@ export default function Home() {
                         tempDelay = parseInt(splitTag.val) * 1000;
                     }
 
-                    if(splitTag && splitTag.val === "END_STORY_ONE") {
-                        currentActiveStory = 1;
+                    if (splitTag && splitTag.val === "END_STORY_ONE") {
+                        setCurrentActiveStory(1);
                         paused = true;
-                        console.log("Pass to story 2")
+                        console.log("==== Pass to story 2 ====")
                     }
 
                     // Basic usage
@@ -134,7 +135,7 @@ export default function Home() {
                     // Create paragraph with anchor element
                     let choiceParagraphElement = document.createElement('p');
                     choiceParagraphElement.classList.add("choice");
-                    choiceParagraphElement.innerHTML = `<button class="answer"><span>${choice.text}</span></button>`
+                    choiceParagraphElement.innerHTML = `<button class="answer"><span>${removeNamePrefix(choice.text)}</span></button>`
                     storyContainer.current.appendChild(choiceParagraphElement);
 
                     // Fade choice in after a short delay
@@ -153,7 +154,7 @@ export default function Home() {
                         story.ChooseChoiceIndex(choice.index);
 
                         // Aaand loop
-                        continueStory(currentActiveStory);
+                        continueStory();
                     });
                 });
             }
@@ -167,18 +168,18 @@ export default function Home() {
                 scrollDown(previousBottomEdge);
             }
 
-            if(paused) {
+            if (paused) {
                 return;
             }
 
             setTimeout(() => {
-                console.log("Waited:", delay);
-                continueStory(currentActiveStory);
+                //console.log("Waited:", delay);
+                continueStory();
             }, delay);
         }
     }
 
-    // Utility functions //
+    // INKY UTILITY
 
     const restart = () => {
         story.ResetState();
@@ -268,7 +269,16 @@ export default function Home() {
         return null;
     }
 
-    // Functions
+    const removeNamePrefix = (string) => {
+        let output = "";
+        let index = string.indexOf("-");
+        if (-1 !== index) {
+            output = string.slice(1);
+        }
+        return output;
+    }
+
+    // USER INPUTS
 
     const handleUserName = (val) => {
         if (stories.length > 0) {
@@ -280,13 +290,20 @@ export default function Home() {
             setStoriesGlobalVars([{ label: "hate_name", value: val }])
         }
     }
+    const handleContinueStory = () => {
+        console.log("Click user continue story");
+        paused = false;
+        continueStory();
+    }
+
+    // INKY CONTROL STORY
 
     const beginStory = () => {
         if (null !== story) {
             console.log("== Setup and start story ==");
             paused = false;
             setTempLife(parseInt(stories[0].variablesState["love_bar"]))
-            continueStory(currentActiveStory);
+            continueStory();
         }
     }
 
@@ -297,6 +314,8 @@ export default function Home() {
             })
         })
     }
+
+    // USE EFFECT
 
     useEffect(() => {
         let story1Promise = fetch(`${story1Path}.json`);
@@ -343,6 +362,12 @@ export default function Home() {
         }
     }, [tempLife])
 
+    useEffect(() => {
+        if (0 !== currentActiveStory && null !== btnContinueStory.current) {
+            btnContinueStory.current.classList.add("show");
+        }
+    }, [currentActiveStory])
+
     return (
         <div>
             <Head>
@@ -356,6 +381,8 @@ export default function Home() {
                 <input type="text" defaultValue="" onChange={(e) => handleHateName(e.currentTarget.value)} />
 
                 <button onClick={beginStory}>Start</button>
+
+                <button className="btn-continue" onClick={handleContinueStory} ref={btnContinueStory}>Continue story</button>
 
                 <p>Life: {life}%</p>
                 <div className="lifebar-container">
