@@ -55,10 +55,9 @@ a {
 
 .answer_illu {
     width: 150px;
-    position: absolute;
-    /* left: -290px; */
-    transform: translate(-240px, -100px);
+    transform: translate(10px, 10px);
 }
+
 
 .discussion_text {
       transform: scaleY(-1);

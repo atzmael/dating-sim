@@ -34,6 +34,8 @@ export default function Home() {
     const storyContainer = useRef(null);
     const outerScrollContainer = useRef(null);
     const paragraphContainer = useRef(null);
+    const imgLeftContainer = useRef(null);
+    const imgRightContainer = useRef(null);
 
     const continueStory = (firstTime = false) => {
         let delay = 200.0;
@@ -98,7 +100,8 @@ export default function Home() {
                         let imageElement = document.createElement('img');
                         imageElement.classList.add('answer_illu')
                         imageElement.src = splitTag.val;
-                        paragraphContainer.current.appendChild(imageElement);
+
+                        imgRightContainer.current.prepend(imageElement);
 
                         showAfter(delay, imageElement);
                         delay += 200.0;
@@ -453,12 +456,13 @@ export default function Home() {
                         <button className="btn_continue" onClick={(e) => handleSteps(e, "INTRO_TWO")}>Next</button>
                         {/* DEBUG FEAT */}
                     </div>
-
+                    <div className="leftImages" ref={imgLeftContainer}></div>
                     <div className="outerContainer" ref={outerScrollContainer}>
                         <div id="story" ref={storyContainer}>
                             <div className="paragraphContainer" ref={paragraphContainer}></div>
                         </div>
                     </div>
+                    <div className="rightImages" ref={imgRightContainer}></div>
                 </div>
                 {/* CONCLUSION */}
                 <div className={`step conclusion ${5 === step ? 'show' : ''}`}>
