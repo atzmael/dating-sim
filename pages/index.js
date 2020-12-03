@@ -84,6 +84,7 @@ export default function Home() {
                     // IMAGE: src
                     if (splitTag && splitTag.property == "IMAGE") {
                         let imageElement = document.createElement('img');
+                        imageElement.classList.add('answer_illu')
                         imageElement.src = splitTag.val;
                         storyContainer.current.appendChild(imageElement);
 
