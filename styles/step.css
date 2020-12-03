@@ -11,7 +11,9 @@
     color: #fff;
 
     width: 420px;
+    max-width: 100vw;
     height: 780px;
+    max-height: 100vh;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -39,7 +41,6 @@
     transform: translateX(-50%);
 }
 
-
 /* QUESTIONS */
 .step.questions .content label {
     max-width: 240px;
@@ -53,7 +54,13 @@
     border: none;
     border-bottom: solid 2px #fff;
     outline: none;
-    color: #FFF;
+    color: #fff;
     font-size: 20px;
     text-align: center;
+}
+
+@media screen and (max-width: 767px) {
+    .step.game :not(.outerContainer) {
+        display: none;
+    }
 }

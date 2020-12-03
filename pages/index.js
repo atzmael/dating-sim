@@ -443,19 +443,15 @@ export default function Home() {
                 </div>
                 {/* GAME */}
                 <div className={`step game ${4 === step ? 'show' : ''}`}>
-                    <div className="lifebar-container">
-                        <p>Life: {life}%</p>
-                        <p className="lifebar" style={{ width: `${life}%` }}></p>
 
-                        {/* DEBUG FEAT */}
-                        <input type="text" defaultValue="" onChange={(e) => handleUserName(e.currentTarget.value)} />
-                        <input type="text" defaultValue="" onChange={(e) => handleHateName(e.currentTarget.value)} />
-                        <button className="btn_start" onClick={beginStory}>Start</button>
-                        <button className="btn_continue" onClick={(e) => handleSteps(e, "INTRO_TWO")}>Continue story to story 2</button>
-
-                        <button className="btn_continue" onClick={(e) => handleSteps(e, "INTRO_TWO")}>Next</button>
-                        {/* DEBUG FEAT */}
+                    <div className="lovebar-container">
+                        <p className="lovebar" style={{ width: `${life}%` }}></p>
                     </div>
+
+                    {/* DEBUG FEAT */}
+                    <button className="btn_continue" onClick={(e) => handleSteps(e, "INTRO_TWO")}>Next</button>
+                    {/* DEBUG FEAT */}
+
                     <div className="leftImages" ref={imgLeftContainer}></div>
                     <div className="outerContainer" ref={outerScrollContainer}>
                         <div id="story" ref={storyContainer}>
