@@ -37,6 +37,7 @@ const Home = () => {
     const [username, setUsername] = useState("Camille");
     const [isIntro2, setIsIntro2] = useState(false);
     const [displayNextBtn, setDisplayNextBtn] = useState(false);
+    const [displayEndBtn, setDisplayEndBtn] = useState(false);
 
     // DOM elements // useRef
     const storyContainer = useRef(null);
@@ -49,7 +50,8 @@ const Home = () => {
     const gameContainer = useRef(null);
 
     const continueStory = (firstTime = false) => {
-        let delay = 200.0;
+        let delay = 2000.0;
+        let delayChoice = 200.0;
         let customClasses = [];
         let story = stories[currentActiveStory];
 
@@ -74,7 +76,7 @@ const Home = () => {
             let choices = story.currentChoices;
             let activeUser = false
 
-            // console.log("Curr paragraph:", paragraphText);
+            console.log("Curr paragraph:", paragraphText);
             console.log("Curr tags:", tags);
             console.log("Curr choices:", choices);
 
@@ -101,7 +103,7 @@ const Home = () => {
                     }
 
                     if (splitTag && splitTag.property === "DELAY") {
-                        delay += splitTag.val
+                        delay += parseInt(splitTag.val) * 1000;
                     }
 
                     if (splitTag && splitTag.property === "SUBJECT") {
@@ -110,25 +112,32 @@ const Home = () => {
                     }
 
                     if (splitTag && (splitTag.val === "END_STORY_ONE" || splitTag.val === "END_STORY_TWO")) {
+                        if (splitTag.val === "END_STORY_ONE") {
+                            endofstory_one = true;
+                        } else if (splitTag.val === "END_STORY_TWO") {
+                            endofstory_two = true;
+                        }
                         setCurrentActiveStory(1);
                         paused = true;
-                        endofstory_one = true;
-                        setDisplayNextBtn(true);
                         console.log("==== Pass to story 2 ====")
                     }
 
                     if (splitTag && splitTag.property === "CHAT_TYPE") {
                         if ("though" === splitTag.val) {
                             showThough = true;
-                            timerBarContainer.current.classList.add('show');
-                            gameContainer.current.classList.remove("speak-mode");
-                            gameContainer.current.classList.add("though-mode");
+                            setTimeout(() => {
+                                timerBarContainer.current.classList.add('show');
+                                gameContainer.current.classList.remove("speak-mode");
+                                gameContainer.current.classList.add("though-mode");
+                            }, delay)
                         }
                         if ("speak" === splitTag.val) {
                             showSpeak = true;
-                            timerBarContainer.current.classList.remove('show');
-                            gameContainer.current.classList.remove("though-mode");
-                            gameContainer.current.classList.add("speak-mode");
+                            setTimeout(() => {
+                                timerBarContainer.current.classList.remove('show');
+                                gameContainer.current.classList.remove("though-mode");
+                                gameContainer.current.classList.add("speak-mode");
+                            }, delay)
                         }
                         chatmode = splitTag.val
                         console.log("================CHAT MODE CHANGED:", splitTag.val)
@@ -142,8 +151,8 @@ const Home = () => {
                         imageElement.src = `./img/chat/${splitTag.val}`;
                         let randomX = Math.random() * 150;
                         let randomY = Math.random() * (20 - (-20) + (-20));
-                        if(activeUser) {
-                            if(imgLeftContainer.current.childElementCount === 3) {
+                        if (activeUser) {
+                            if (imgLeftContainer.current.childElementCount === 3) {
                                 imgLeftContainer.current.querySelector("img:first-child").remove()
                             }
                             imageElement.style.transform = `translate(${randomX}px, ${randomY}px)`
@@ -156,12 +165,12 @@ const Home = () => {
                             imgRightContainer.current.appendChild(imageElement);
                         }
                         showAfter(delay, imageElement);
-                        delay += 200.0;
                     } else if (splitTag && splitTag.property == "CLASS") {
                         customClasses.push(splitTag.val);
                     } else if (tag == "CLEAR" || tag == "RESTART") {
                         removeAll("p");
                         removeAll("img");
+                        removeAll("button");
 
                         // Comment out this line if you want to leave the header visible when clearing
                         setVisible(".header", false);
@@ -179,6 +188,8 @@ const Home = () => {
                 paragraphElement.classList.add('paraphThough');
                 paragraphElement.innerHTML = "De retour dans la discussion";
                 paragraphContainer.current.prepend(paragraphElement);
+
+                showAfter(delay, paragraphElement);
 
                 showSpeak = false;
             }
@@ -203,15 +214,19 @@ const Home = () => {
                 delay += 200.0;
             }
 
-            if (tempDelay !== 0) {
+            /* if (tempDelay !== 0) {
                 delay = tempDelay;
                 tempDelay = 0;
-            }
+            } */
 
             if (choices.length > 0) {
+                delay = 200.0;
 
                 let choiceParagraphContainer = document.createElement('div');
-                choiceParagraphContainer.classList.add('choiceContainer')
+                choiceParagraphContainer.classList.add('choiceContainer');
+
+                storyContainer.current.appendChild(choiceParagraphContainer);
+                showAfter(delay, choiceParagraphContainer);
 
                 /* if (showThough) {
                     let paragraphElement = document.createElement('p');
@@ -272,7 +287,7 @@ const Home = () => {
                                 time = base_timer;
                                 userHasClicked = false;
                             } else if (time > 0) {
-                                timerBar.current.style.height = `${time * 74 / base_timer}%`;
+                                timerBar.current.style.height = `${time * 71 / base_timer}%`;
                             }
                             console.log(time);
                         }, 100)
@@ -285,7 +300,7 @@ const Home = () => {
                                 time = base_timer;
                                 userHasClicked = false;
                             } else if (time > 0) {
-                                timerBar.current.style.height = `${time * 74 / base_timer}%`;
+                                timerBar.current.style.height = `${time * 71 / base_timer}%`;
                             }
                             console.log(time);
                         }, 100)
@@ -303,7 +318,7 @@ const Home = () => {
 
                     // Fade choice in after a short delay
                     showAfter(delay, choiceParagraphElement);
-                    delay += 200.0;
+                    delay += 100.0;
 
 
                     // Click on choice
@@ -341,7 +356,6 @@ const Home = () => {
                     }
 
                 });
-                storyContainer.current.appendChild(choiceParagraphContainer);
             }
 
             /* // Extend height to fit
@@ -363,20 +377,42 @@ const Home = () => {
             } */
 
             if (endofstory_one) {
+                setTimeout(() => {
+                    setDisplayNextBtn(true);
+                }, delay)
+
                 let paragraphElement = document.createElement('p');
                 paragraphElement.classList.add('paraphThough');
                 paragraphElement.innerHTML = "Fin de la partie 1.";
                 paragraphContainer.current.prepend(paragraphElement);
 
+                showAfter(delay, paragraphElement);
+
                 endofstory_one = false;
+            }
+
+            if (endofstory_two) {
+                setTimeout(() => {
+                    setDisplayEndBtn(true);
+                }, delay)
+
+                let paragraphElement = document.createElement('p');
+                paragraphElement.classList.add('paraphThough');
+                paragraphElement.innerHTML = "Fin.";
+                paragraphContainer.current.prepend(paragraphElement);
+
+                showAfter(delay, paragraphElement);
+
+                endofstory_two = false;
             }
 
             if (paused) {
                 return;
             }
 
+            console.log("Have to wait:", delay)
             setTimeout(() => {
-                //console.log("Waited:", delay);
+                console.log("Waited:", delay);
                 continueStory();
             }, delay);
         }
@@ -436,7 +472,7 @@ const Home = () => {
     // Remove all elements that match the given selector. Used for removing choices after
     // you've picked one, as well as for the CLEAR and RESTART tags.
     const removeAll = (selector) => {
-        let allElements = storyContainer.current.querySelectorAll(selector);
+        let allElements = gameContainer.current.querySelectorAll(selector);
         for (let i = 0; i < allElements.length; i++) {
             let el = allElements[i];
             el.parentNode.removeChild(el);
@@ -474,9 +510,9 @@ const Home = () => {
 
     const removeNamePrefix = (string) => {
         let output = string;
-        let index = string.indexOf("-");
+        let index = string.indexOf("- ");
         if (-1 !== index) {
-            output = string.slice(1);
+            output = string.slice(2);
         }
         return output;
     }
@@ -507,6 +543,9 @@ const Home = () => {
             }
         } else if ("INTRO_TWO" === type) {
             setIsIntro2(true);
+            removeAll(".discussion_text");
+            removeAll(".paraphThough");
+            removeAll(".answer_illu");
             setDisplayNextBtn(false);
         }
     }
@@ -639,7 +678,7 @@ const Home = () => {
                 <div className={`step game ${4 === step ? 'show' : ''} speak-mode`} ref={gameContainer}>
                     <img className="background" src={`img/bg_screen_2.png`} />
                     <div className="lovebar-container">
-                        <p className="lovebar" style={{ height: `${(life*74/100)}%` }}></p>
+                        <p className="lovebar" style={{ height: `${(life * 74 / 100)}%` }}></p>
                     </div>
                     <div className="timer-container" ref={timerBarContainer}>
                         <p className="timer" ref={timerBar}></p>
@@ -659,9 +698,10 @@ const Home = () => {
                         {/* <div className="gradient-top"></div> */}
                         <div id="story" ref={storyContainer}>
                             <div className="paragraphContainer" ref={paragraphContainer}></div>
-                            {displayNextBtn && <button className="btn_continue btn_next" onClick={(e) => handleSteps(e, !isIntro2 ? "INTRO_TWO" : "CONCLUSION")}><img src="img/btn-continue.png" /></button>}
+                            {displayNextBtn && <button className="btn_continue btn_next" onClick={(e) => handleSteps(e, "INTRO_TWO")}><img src="img/btn-continue.png" /></button>}
+                            {displayEndBtn && <button className="btn_continue btn_next" onClick={(e) => handleSteps(e, "CONCLUSION")}><img src="img/btn-continue.png" /></button>}
                             <div className="bg-though-mode">
-                                <p className="paraphThough">Dans les pensées de Sam...</p>
+                                <p className="bg-though-text">Dans les pensées de Sam...</p>
                             </div>
                         </div>
                     </div>
