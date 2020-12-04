@@ -301,15 +301,6 @@ a {
   border-top-right-radius: 15px;
   color: #e7f297;
 }
-.players .user.active::before {
-  content: "Tu joues";
-  position: absolute;
-  top: -12px;
-  left: 50%;
-  transform: translateX(-50%) translateY(-100%);
-  color: #e7f297;
-  text-transform: none;
-}
 
 .players .user.active {
   background-color: #e7f297;
@@ -332,6 +323,9 @@ a {
   background-color: #fdb572;
   color: #3e00a4;
 }
+.players .friend.active::before {
+  color: #fdb572;
+}
 
 .bg-though-mode {
   opacity: 0;
@@ -345,8 +339,12 @@ a {
   z-index: 20;
 }
 
-.bg-though-mode .paraphThough {
-  transform: none;
+.bg-though-mode .bg-though-text {
+  color: rgba(255, 255, 225, 0.5);
+  letter-spacing: 2%;
+  text-align: center;
+  float: left;
+  width: 100%;
 }
 
 .though-mode .choiceContainer {
@@ -360,7 +358,7 @@ a {
   margin: 0;
   border: none;
   z-index: 22;
-  padding-top:50px;
+  padding-top: 50px;
 }
 .though-mode .bg-though-mode {
   opacity: 1;
