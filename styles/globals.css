@@ -393,4 +393,5 @@ a {
 .highlight {
   display: block;
   color: #fdb572;
+  text-transform: uppercase;
 }

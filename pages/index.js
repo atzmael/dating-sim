@@ -681,12 +681,10 @@ const Home = () => {
                     <div className="content">
                         <h3 className="title">2. La nouvelle</h3>
                         <p className="text">
-                            Aujourd'hui c'est le grand jour.
-                            Camille et Sam se rencontre enfin.
-
-                            <span className="highlight">Cette fois-ci, tu incarnes Sam.</span>
-
-                            Tu retrouves Camille dans un bar
+                            Aujourd'hui c'est le grand jour.<br />
+                            Camille et Sam se rencontre enfin.<br />
+                            <span className="highlight">Cette fois-ci, tu incarnes Sam.</span><br />
+                            Tu retrouves Camille dans un bar<br />
                             qu’iel connaît bien.
                         </p>
                         <button className="btn_continue" onClick={(e) => handleSteps(e, "GAME")}><img src="img/btn-continue.png" /></button>
