@@ -215,24 +215,27 @@ a {
 }
 
 .lovebar-container {
-  height: 360px;
-  width: 30px;
-  background-color: white;
-  border: 2px solid black;
+  height: 418px;
+  width: 36px;
+  /* background-color: white; */
+  /* border: 2px solid black; */
   position: absolute;
   top: calc(50% - 30px);
   left: 60px;
   transform: translateY(-50%);
   box-sizing: content-box;
+  background-image: url('../public/img/Barre_love_03.png');
+  background-repeat: no-repeat;
+  background-size: contain;
 }
 .lovebar {
-  height: 100%;
-  width: 30px;
-  background-color: black;
+  height: 74%;
+  width: 12px;
+  background-color: #FAC3BB;
   margin: 0;
   position: absolute;
-  left: 0;
-  bottom: 0;
+  left: 12px;
+  bottom: 62px;
 }
 .lovebar-icon {
   position: absolute;
@@ -241,29 +244,32 @@ a {
 }
 
 .timer-container {
-  height: 360px;
-  width: 30px;
-  background-color: white;
-  border: 2px solid black;
+  height: 418px;
+  width: 36px;
+  /* background-color: white;
+  border: 2px solid black; */
   position: absolute;
   top: calc(50% - 30px);
   right: 60px;
   transform: translateY(-50%);
   box-sizing: content-box;
   opacity: 0;
+  background-image: url('../public/img/Barre_love_03.png');
+  background-repeat: no-repeat;
+  background-size: contain;
 }
 
 .timer-container.show {
   opacity: 1;
 }
 .timer {
-  height: 100%;
-  width: 30px;
-  background-color: black;
+  height: 74%;
+  width: 12px;
+  background-color: #f0608E;
   margin: 0;
   position: absolute;
-  left: 0;
-  bottom: 0;
+  left: 12px;
+  bottom: 62px;
 }
 
 .players {

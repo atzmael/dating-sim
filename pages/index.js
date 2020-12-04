@@ -289,7 +289,7 @@ const Home = () => {
                                 time = base_timer;
                                 userHasClicked = false;
                             } else if (time > 0) {
-                                timerBar.current.style.height = `${time * 100 / base_timer}%`;
+                                timerBar.current.style.height = `${time * 74 / base_timer}%`;
                             }
                             console.log(time);
                         }, 100)
@@ -302,7 +302,7 @@ const Home = () => {
                                 time = base_timer;
                                 userHasClicked = false;
                             } else if (time > 0) {
-                                timerBar.current.style.height = `${time * 100 / base_timer}%`;
+                                timerBar.current.style.height = `${time * 74 / base_timer}%`;
                             }
                             console.log(time);
                         }, 100)
@@ -676,7 +676,7 @@ const Home = () => {
                 <div className={`step game ${4 === step ? 'show' : ''} speak-mode`} ref={gameContainer}>
                     <img className="background" src={`img/bg_screen_2.png`} />
                     <div className="lovebar-container">
-                        <p className="lovebar" style={{ height: `${life}%` }}></p>
+                        <p className="lovebar" style={{ height: `${(life*74/100)}%` }}></p>
                     </div>
                     <div className="timer-container" ref={timerBarContainer}>
                         <p className="timer" ref={timerBar}></p>
