@@ -130,6 +130,7 @@ const Home = () => {
                                 timerBarContainer.current.classList.add('show');
                                 gameContainer.current.classList.remove("speak-mode");
                                 gameContainer.current.classList.add("though-mode");
+                                chatmode = splitTag.val
                             }, delay)
                         }
                         if ("speak" === splitTag.val) {
@@ -138,9 +139,9 @@ const Home = () => {
                                 timerBarContainer.current.classList.remove('show');
                                 gameContainer.current.classList.remove("though-mode");
                                 gameContainer.current.classList.add("speak-mode");
+                                chatmode = splitTag.val
                             }, delay)
                         }
-                        chatmode = splitTag.val
                         console.log("================CHAT MODE CHANGED:", splitTag.val)
                     }
 
@@ -228,9 +229,6 @@ const Home = () => {
             } */
 
             if (choices.length > 0) {
-                if ("though" === chatmode) {
-                    delay = 200.0;
-                }
 
                 let choiceParagraphContainer = document.createElement('div');
                 choiceParagraphContainer.classList.add('choiceContainer');
@@ -245,77 +243,80 @@ const Home = () => {
                     choiceParagraphContainer.prepend(paragraphElement);
                 } */
 
-                let boooool = true;
-                if ("though" === chatmode && boooool) {
-                    let random = Math.round(Math.random());
-                    let time = base_timer;
+                setTimeout(() => {
+                    let boooool = true;
+                    if ("though" === chatmode && boooool) {
+                        let random = Math.round(Math.random());
+                        let time = base_timer;
 
-                    if (null !== timeout) {
-                        clearTimeout(timeout);
-                        timeout = setTimeout(() => {
+                        if (null !== timeout) {
                             clearTimeout(timeout);
-                            clearInterval(interval);
-                            userHasClicked = false;
-                            time = base_timer;
-
-                            // Remove all existing choices
-                            removeAll("p.choice");
-                            removeAll("div.choiceContainer");
-
-                            // Tell the story where to go next
-                            story.ChooseChoiceIndex(random);
-
-                            // Aaand loop
-                            continueStory();
-                        }, 10000);
-                    } else {
-                        timeout = setTimeout(() => {
-                            clearTimeout(timeout);
-                            clearInterval(interval);
-                            userHasClicked = false;
-                            time = base_timer;
-
-                            // Remove all existing choices
-                            removeAll("p.choice");
-                            removeAll("div.choiceContainer");
-
-                            // Tell the story where to go next
-                            story.ChooseChoiceIndex(random);
-
-                            // Aaand loop
-                            continueStory();
-                        }, 10000);
-                    }
-
-                    if (null !== interval) {
-                        clearInterval(interval);
-                        interval = setInterval(() => {
-                            time -= 0.1;
-                            if (userHasClicked) {
+                            timeout = setTimeout(() => {
                                 clearTimeout(timeout);
                                 clearInterval(interval);
-                                time = base_timer;
                                 userHasClicked = false;
-                            } else if (time > 0) {
-                                timerBar.current.style.height = `${time * 71 / base_timer}%`;
-                            }
-                            console.log(time);
-                        }, 100)
-                    } else {
-                        interval = setInterval(() => {
-                            time -= 0.1;
-                            if (userHasClicked) {
+                                time = base_timer;
+
+                                // Remove all existing choices
+                                removeAll("p.choice");
+                                removeAll("div.choiceContainer");
+
+                                // Tell the story where to go next
+                                story.ChooseChoiceIndex(random);
+
+                                // Aaand loop
+                                continueStory();
+                            }, 10000);
+                        } else {
+                            timeout = setTimeout(() => {
                                 clearTimeout(timeout);
                                 clearInterval(interval);
-                                time = base_timer;
                                 userHasClicked = false;
-                            } else if (time > 0) {
-                                timerBar.current.style.height = `${time * 71 / base_timer}%`;
-                            }
-                            console.log(time);
-                        }, 100)
+                                time = base_timer;
+
+                                // Remove all existing choices
+                                removeAll("p.choice");
+                                removeAll("div.choiceContainer");
+
+                                // Tell the story where to go next
+                                story.ChooseChoiceIndex(random);
+
+                                // Aaand loop
+                                continueStory();
+                            }, 10000);
+                        }
+
+                        if (null !== interval) {
+                            clearInterval(interval);
+                            interval = setInterval(() => {
+                                time -= 0.1;
+                                if (userHasClicked) {
+                                    clearTimeout(timeout);
+                                    clearInterval(interval);
+                                    time = base_timer;
+                                    userHasClicked = false;
+                                } else if (time > 0) {
+                                    timerBar.current.style.height = `${time * 71 / base_timer}%`;
+                                }
+                                console.log(time);
+                            }, 100)
+                        } else {
+                            interval = setInterval(() => {
+                                time -= 0.1;
+                                if (userHasClicked) {
+                                    clearTimeout(timeout);
+                                    clearInterval(interval);
+                                    time = base_timer;
+                                    userHasClicked = false;
+                                } else if (time > 0) {
+                                    timerBar.current.style.height = `${time * 71 / base_timer}%`;
+                                }
+                                console.log(time);
+                            }, 100)
+                        }
                     }
-                }
+                }, delay)
+
 
                 story.currentChoices.forEach(function (choice) {
 
@@ -682,7 +683,7 @@ const Home = () => {
                         <h3 className="title">2. La nouvelle</h3>
                         <p className="text">
                             Aujourd'hui c'est le grand jour.<br />
-                            Camille et Sam se rencontre enfin.<br />
+                            Camille et Sam se rencontre enfin.<br /><br />
                             <span className="highlight">Cette fois-ci, tu incarnes Sam.</span><br />
                             Tu retrouves Camille dans un bar<br />
                             qu’iel connaît bien.
