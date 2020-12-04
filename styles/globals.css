@@ -224,14 +224,14 @@ a {
   left: 60px;
   transform: translateY(-50%);
   box-sizing: content-box;
-  background-image: url('../public/img/Barre_love_03.png');
+  background-image: url("../public/img/Barre_love_03.png");
   background-repeat: no-repeat;
   background-size: contain;
 }
 .lovebar {
   height: 74%;
   width: 12px;
-  background-color: #FAC3BB;
+  background-color: #fac3bb;
   margin: 0;
   position: absolute;
   left: 12px;
@@ -254,7 +254,7 @@ a {
   transform: translateY(-50%);
   box-sizing: content-box;
   opacity: 0;
-  background-image: url('../public/img/Barre_timer_03.png');
+  background-image: url("../public/img/Barre_timer_03.png");
   background-repeat: no-repeat;
   background-size: contain;
 }
@@ -265,7 +265,7 @@ a {
 .timer {
   height: 71%;
   width: 12px;
-  background-color: #f0608E;
+  background-color: #f0608e;
   margin: 0;
   position: absolute;
   left: 12px;
@@ -388,4 +388,9 @@ a {
 }
 .though-mode .choiceContainer .choice:last-child .answer {
   border-bottom-right-radius: 15px;
+}
+
+.highlight {
+  display: block;
+  color: #fdb572;
 }

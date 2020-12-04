@@ -145,7 +145,7 @@ const Home = () => {
                     }
 
                     if (splitTag && splitTag.property === "DISPLAY_P") {
-                        if(splitTag.val == true) {
+                        if (splitTag.val == true) {
                             console.log("must display this paraph")
                             mustDisplay = true;
                         }
@@ -680,8 +680,15 @@ const Home = () => {
                     <img className="background" src={`img/bg_screen_2.png`} />
                     <div className="content">
                         <h3 className="title">2. La nouvelle</h3>
-                        <p className="text">Sam et toi échangez par messages depuis quelques semaines.<br /><br />
-                        Vous ne vous êtes pas encore rencontré.e.s mais commencez à bien vous connaitre.</p>
+                        <p className="text">
+                            Aujourd'hui c'est le grand jour.
+                            Camille et Sam se rencontre enfin.
+
+                            <span className="highlight">Cette fois-ci, tu incarnes Sam.</span>
+
+                            Tu retrouves Camille dans un bar
+                            qu’iel connaît bien.
+                        </p>
                         <button className="btn_continue" onClick={(e) => handleSteps(e, "GAME")}><img src="img/btn-continue.png" /></button>
                     </div>
                 </div>
