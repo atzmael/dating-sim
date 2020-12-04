@@ -56,6 +56,8 @@ const Home = () => {
         let showThough = false;
         let showSpeak = false;
         let userHasClicked = false;
+        let endofstory_one = false;
+        let endofstory_two = false;
 
         //console.log(currentActiveStory, story);
 
@@ -110,6 +112,7 @@ const Home = () => {
                     if (splitTag && (splitTag.val === "END_STORY_ONE" || splitTag.val === "END_STORY_TWO")) {
                         setCurrentActiveStory(1);
                         paused = true;
+                        endofstory_one = true;
                         setDisplayNextBtn(true);
                         console.log("==== Pass to story 2 ====")
                     }
@@ -136,7 +139,7 @@ const Home = () => {
                     if (splitTag && splitTag.property == "IMAGE") {
                         let imageElement = document.createElement('img');
                         imageElement.classList.add('answer_illu')
-                        imageElement.src = splitTag.val;
+                        imageElement.src = `./img/chat/${splitTag.val}`;
                         let randomX = Math.random() * 150;
                         let randomY = Math.random() * (20 - (-20) + (-20));
                         if(activeUser) {
@@ -146,7 +149,7 @@ const Home = () => {
                             imageElement.style.transform = `translate(${randomX}px, ${randomY}px)`
                             imgLeftContainer.current.appendChild(imageElement);
                         } else {
-                            if(imgRightContainer.childElementCount === 3) {
+                            if (imgRightContainer.childElementCount === 3) {
                                 imgRightContainer.current.querySelector("img:first-child").remove()
                             }
                             imageElement.style.transform = `translate(${randomX}px, ${randomY}px)`
@@ -180,22 +183,25 @@ const Home = () => {
                 showSpeak = false;
             }
 
-            // Create paragraph element (initially hidden)
-            let paragraphElement = document.createElement('p');
-            paragraphElement.classList.add('discussion_text');
-            if (activeUser) {
-                paragraphElement.classList.add('left');
+            if ("though" !== chatmode) {
+                console.log("Creating paragraph")
+                // Create paragraph element (initially hidden)
+                let paragraphElement = document.createElement('p');
+                paragraphElement.classList.add('discussion_text');
+                if (activeUser) {
+                    paragraphElement.classList.add('left');
+                }
+                paragraphElement.innerHTML = paragraphText;
+                paragraphContainer.current.prepend(paragraphElement);
+
+                // Add any custom classes derived from ink tags
+                for (let i = 0; i < customClasses.length; i++)
+                    paragraphElement.classList.add(customClasses[i]);
+
+                // Fade in paragraph after a short delay
+                showAfter(delay, paragraphElement);
+                delay += 200.0;
             }
-            paragraphElement.innerHTML = paragraphText;
-            paragraphContainer.current.prepend(paragraphElement);
-
-            // Add any custom classes derived from ink tags
-            for (let i = 0; i < customClasses.length; i++)
-                paragraphElement.classList.add(customClasses[i]);
-
-            // Fade in paragraph after a short delay
-            showAfter(delay, paragraphElement);
-            delay += 200.0;
 
             if (tempDelay !== 0) {
                 delay = tempDelay;
@@ -214,7 +220,7 @@ const Home = () => {
                     choiceParagraphContainer.prepend(paragraphElement);
                 } */
 
-                let boooool = false
+                let boooool = true;
                 if ("though" === chatmode && boooool) {
                     let random = Math.round(Math.random());
                     let time = base_timer;
@@ -293,7 +299,7 @@ const Home = () => {
                     let choiceParagraphElement = document.createElement('p');
                     choiceParagraphElement.classList.add("choice");
                     choiceParagraphElement.innerHTML = `<button class="answer"><span>${removeNamePrefix(choice.text)}</span></button>`;
-                    choiceParagraphContainer.appendChild(choiceParagraphElement)
+                    choiceParagraphContainer.appendChild(choiceParagraphElement);
 
                     // Fade choice in after a short delay
                     showAfter(delay, choiceParagraphElement);
@@ -347,13 +353,22 @@ const Home = () => {
                 scrollDown(previousBottomEdge);
             } */
 
-            if (showThough) {
+            /* if (showThough) {
                 let paragraphElement = document.createElement('p');
                 paragraphElement.classList.add('paraphThough');
                 paragraphElement.innerHTML = "Dans les pensées de Sam...";
                 paragraphContainer.current.prepend(paragraphElement);
 
                 showThough = false;
+            } */
+
+            if (endofstory_one) {
+                let paragraphElement = document.createElement('p');
+                paragraphElement.classList.add('paraphThough');
+                paragraphElement.innerHTML = "Fin de la partie 1.";
+                paragraphContainer.current.prepend(paragraphElement);
+
+                endofstory_one = false;
             }
 
             if (paused) {
@@ -645,10 +660,10 @@ const Home = () => {
                         <div id="story" ref={storyContainer}>
                             <div className="paragraphContainer" ref={paragraphContainer}></div>
                             {displayNextBtn && <button className="btn_continue btn_next" onClick={(e) => handleSteps(e, !isIntro2 ? "INTRO_TWO" : "CONCLUSION")}><img src="img/btn-continue.png" /></button>}
-                            <div className="bg-though-mode"></div>
+                            <div className="bg-though-mode">
+                                <p className="paraphThough">Dans les pensées de Sam...</p>
+                            </div>
                         </div>
-                        {/* DEBUG FEAT */}
-                        {/* DEBUG FEAT */}
                     </div>
                     <div className="rightImages" ref={imgRightContainer}>
                         {/* <img src="./img/chat/01_telepohne.png" class="answer_illu"/>
