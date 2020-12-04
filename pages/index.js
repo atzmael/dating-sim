@@ -140,9 +140,7 @@ const Home = () => {
                         let randomX = Math.random() * 150;
                         let randomY = Math.random() * (20 - (-20) + (-20));
                         if(activeUser) {
-                            console.log(imgLeftContainer.current.childElementCount)
                             if(imgLeftContainer.current.childElementCount === 3) {
-                                console.log("coucoucououcouco")
                                 imgLeftContainer.current.querySelector("img:first-child").remove()
                             }
                             imageElement.style.transform = `translate(${randomX}px, ${randomY}px)`
@@ -151,7 +149,7 @@ const Home = () => {
                             if(imgRightContainer.childElementCount === 3) {
                                 imgRightContainer.current.querySelector("img:first-child").remove()
                             }
-                            imageElement.style.transform = `translate(-${randomX}px, ${randomY}px)`
+                            imageElement.style.transform = `translate(${randomX}px, ${randomY}px)`
                             imgRightContainer.current.appendChild(imageElement);
                         }
                         showAfter(delay, imageElement);
@@ -638,9 +636,9 @@ const Home = () => {
                     </div>
 
                     <div className="leftImages" ref={imgLeftContainer}>
-                        <img src="./img/chat/01_telepohne.png" class="answer_illu"/>
+                        {/* <img src="./img/chat/01_telepohne.png" class="answer_illu"/>
                         <img src="./img/chat/02_sonnette.png" class="answer_illu"/>
-                        <img src="./img/chat/04_yeux.png" class="answer_illu"/>
+                        <img src="./img/chat/04_yeux.png" class="answer_illu"/> */}
                     </div>
                     <div className="outerContainer" ref={outerScrollContainer}>
                         {/* <div className="gradient-top"></div> */}
@@ -653,9 +651,9 @@ const Home = () => {
                         {/* DEBUG FEAT */}
                     </div>
                     <div className="rightImages" ref={imgRightContainer}>
-                        <img src="./img/chat/01_telepohne.png" class="answer_illu"/>
+                        {/* <img src="./img/chat/01_telepohne.png" class="answer_illu"/>
                         <img src="./img/chat/02_sonnette.png" class="answer_illu"/>
-                        <img src="./img/chat/03_yeux.png" class="answer_illu"/>
+                        <img src="./img/chat/03_yeux.png" class="answer_illu"/> */}
                     </div>
                 </div>
                 {/* CONCLUSION */}

@@ -96,7 +96,7 @@ a {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  /* pointer-events: none; */
+  pointer-events: none;
 }
 .leftImages {
   left: 10%;
