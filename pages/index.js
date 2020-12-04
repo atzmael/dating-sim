@@ -622,7 +622,8 @@ const Home = () => {
     return (
         <div>
             <Head>
-                <title>Dating Sim</title>
+                <title>Papilou</title>
+                <link rel="shortcut icon" href="img/favicon.png" />
             </Head>
 
             <main className={!isIntro2 ? 'story-one' : 'story-two'}>
@@ -718,7 +719,6 @@ const Home = () => {
                         <h3 className="title">Merci !</h3>
                         <p className="text">On espère que grâce à cette expérience tu as pu mieux comprendre ce que peut vivre une personne qui semble manquer d’empathie.<br /><br />
                         N’hésite pas à recommencer pour tenter de faire mieux !</p>
-                        <button className="btn_continue" onClick={(e) => handleSteps(e, "HOME")}><img src="img/btn-continue.png" /></button>
                     </div>
                 </div>
             </main>
