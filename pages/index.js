@@ -37,6 +37,7 @@ const Home = () => {
     const [username, setUsername] = useState("Camille");
     const [isIntro2, setIsIntro2] = useState(false);
     const [displayNextBtn, setDisplayNextBtn] = useState(false);
+    const [displayEndBtn, setDisplayEndBtn] = useState(false);
 
     // DOM elements // useRef
     const storyContainer = useRef(null);
@@ -391,6 +392,10 @@ const Home = () => {
             }
 
             if (endofstory_two) {
+                setTimeout(() => {
+                    setDisplayEndBtn(true);
+                }, delay)
+
                 let paragraphElement = document.createElement('p');
                 paragraphElement.classList.add('paraphThough');
                 paragraphElement.innerHTML = "Fin.";
@@ -693,7 +698,8 @@ const Home = () => {
                         {/* <div className="gradient-top"></div> */}
                         <div id="story" ref={storyContainer}>
                             <div className="paragraphContainer" ref={paragraphContainer}></div>
-                            {displayNextBtn && <button className="btn_continue btn_next" onClick={(e) => handleSteps(e, !isIntro2 ? "INTRO_TWO" : "CONCLUSION")}><img src="img/btn-continue.png" /></button>}
+                            {displayNextBtn && <button className="btn_continue btn_next" onClick={(e) => handleSteps(e, "INTRO_TWO")}><img src="img/btn-continue.png" /></button>}
+                            {displayEndBtn && <button className="btn_continue btn_next" onClick={(e) => handleSteps(e, "CONCLUSION")}><img src="img/btn-continue.png" /></button>}
                             <div className="bg-though-mode">
                                 <p className="bg-though-text">Dans les pensées de Sam...</p>
                             </div>
