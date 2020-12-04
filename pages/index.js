@@ -8,7 +8,7 @@ let globalTags = null;
 let story1Path = "./story1";
 let story2Path = "./story2";
 let base_life = 100;
-let base_timer = 10;
+let base_timer = 5;
 let tempDelay = 0;
 let paused = true;
 let friend_name = "Sam";
@@ -131,7 +131,7 @@ const Home = () => {
                                 gameContainer.current.classList.remove("speak-mode");
                                 gameContainer.current.classList.add("though-mode");
                                 chatmode = splitTag.val
-                            }, delay)
+                            }, 200)
                         }
                         if ("speak" === splitTag.val) {
                             showSpeak = true;
@@ -229,6 +229,9 @@ const Home = () => {
             } */
 
             if (choices.length > 0) {
+                if ("though" === chatmode) {
+                    delay = 200.0;
+                }
 
                 let choiceParagraphContainer = document.createElement('div');
                 choiceParagraphContainer.classList.add('choiceContainer');
@@ -243,80 +246,77 @@ const Home = () => {
                     choiceParagraphContainer.prepend(paragraphElement);
                 } */
 
-                setTimeout(() => {
-                    let boooool = true;
-                    if ("though" === chatmode && boooool) {
-                        let random = Math.round(Math.random());
-                        let time = base_timer;
+                let boooool = true;
+                if ("though" === chatmode && boooool) {
+                    let random = Math.round(Math.random());
+                    let time = base_timer;
 
-                        if (null !== timeout) {
+                    if (null !== timeout) {
+                        clearTimeout(timeout);
+                        timeout = setTimeout(() => {
                             clearTimeout(timeout);
-                            timeout = setTimeout(() => {
-                                clearTimeout(timeout);
-                                clearInterval(interval);
-                                userHasClicked = false;
-                                time = base_timer;
-
-                                // Remove all existing choices
-                                removeAll("p.choice");
-                                removeAll("div.choiceContainer");
-
-                                // Tell the story where to go next
-                                story.ChooseChoiceIndex(random);
-
-                                // Aaand loop
-                                continueStory();
-                            }, 10000);
-                        } else {
-                            timeout = setTimeout(() => {
-                                clearTimeout(timeout);
-                                clearInterval(interval);
-                                userHasClicked = false;
-                                time = base_timer;
-
-                                // Remove all existing choices
-                                removeAll("p.choice");
-                                removeAll("div.choiceContainer");
-
-                                // Tell the story where to go next
-                                story.ChooseChoiceIndex(random);
-
-                                // Aaand loop
-                                continueStory();
-                            }, 10000);
-                        }
-
-                        if (null !== interval) {
                             clearInterval(interval);
-                            interval = setInterval(() => {
-                                time -= 0.1;
-                                if (userHasClicked) {
-                                    clearTimeout(timeout);
-                                    clearInterval(interval);
-                                    time = base_timer;
-                                    userHasClicked = false;
-                                } else if (time > 0) {
-                                    timerBar.current.style.height = `${time * 71 / base_timer}%`;
-                                }
-                                console.log(time);
-                            }, 100)
-                        } else {
-                            interval = setInterval(() => {
-                                time -= 0.1;
-                                if (userHasClicked) {
-                                    clearTimeout(timeout);
-                                    clearInterval(interval);
-                                    time = base_timer;
-                                    userHasClicked = false;
-                                } else if (time > 0) {
-                                    timerBar.current.style.height = `${time * 71 / base_timer}%`;
-                                }
-                                console.log(time);
-                            }, 100)
-                        }
-                    }
-                }, delay)
+                            userHasClicked = false;
+                            time = base_timer;
 
+                            // Remove all existing choices
+                            removeAll("p.choice");
+                            removeAll("div.choiceContainer");
+
+                            // Tell the story where to go next
+                            story.ChooseChoiceIndex(random);
+
+                            // Aaand loop
+                            continueStory();
+                        }, 10000);
+                    } else {
+                        timeout = setTimeout(() => {
+                            clearTimeout(timeout);
+                            clearInterval(interval);
+                            userHasClicked = false;
+                            time = base_timer;
+
+                            // Remove all existing choices
+                            removeAll("p.choice");
+                            removeAll("div.choiceContainer");
+
+                            // Tell the story where to go next
+                            story.ChooseChoiceIndex(random);
+
+                            // Aaand loop
+                            continueStory();
+                        }, 10000);
+                    }
+
+                    if (null !== interval) {
+                        clearInterval(interval);
+                        interval = setInterval(() => {
+                            time -= 0.1;
+                            if (userHasClicked) {
+                                clearTimeout(timeout);
+                                clearInterval(interval);
+                                time = base_timer;
+                                userHasClicked = false;
+                            } else if (time > 0) {
+                                timerBar.current.style.height = `${time * 71 / base_timer}%`;
+                            }
+                            console.log(time);
+                        }, 100)
+                    } else {
+                        interval = setInterval(() => {
+                            time -= 0.1;
+                            if (userHasClicked) {
+                                clearTimeout(timeout);
+                                clearInterval(interval);
+                                time = base_timer;
+                                userHasClicked = false;
+                            } else if (time > 0) {
+                                timerBar.current.style.height = `${time * 71 / base_timer}%`;
+                            }
+                            console.log(time);
+                        }, 100)
+                    }
+                }
 
                 story.currentChoices.forEach(function (choice) {
 
