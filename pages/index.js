@@ -130,7 +130,6 @@ const Home = () => {
                                 timerBarContainer.current.classList.add('show');
                                 gameContainer.current.classList.remove("speak-mode");
                                 gameContainer.current.classList.add("though-mode");
-                                chatmode = splitTag.val
                             }, 200)
                         }
                         if ("speak" === splitTag.val) {
@@ -139,9 +138,9 @@ const Home = () => {
                                 timerBarContainer.current.classList.remove('show');
                                 gameContainer.current.classList.remove("though-mode");
                                 gameContainer.current.classList.add("speak-mode");
-                                chatmode = splitTag.val
-                            }, delay)
+                            }, 200)
                         }
+                        chatmode = splitTag.val
                         console.log("================CHAT MODE CHANGED:", splitTag.val)
                     }
 
