@@ -49,7 +49,7 @@ const Home = () => {
     const gameContainer = useRef(null);
 
     const continueStory = (firstTime = false) => {
-        let delay = 1000.0;
+        let delay = 2000.0;
         let delayChoice = 200.0;
         let customClasses = [];
         let story = stories[currentActiveStory];
@@ -219,10 +219,7 @@ const Home = () => {
             } */
 
             if (choices.length > 0) {
-
-                if ("though" == chatmode) {
-                    delay = 200.0;
-                }
+                delay = 200.0;
 
                 let choiceParagraphContainer = document.createElement('div');
                 choiceParagraphContainer.classList.add('choiceContainer');
@@ -237,7 +234,7 @@ const Home = () => {
                     choiceParagraphContainer.prepend(paragraphElement);
                 } */
 
-                let boooool = false;
+                let boooool = true;
                 if ("though" === chatmode && boooool) {
                     let random = Math.round(Math.random());
                     let time = base_timer;
@@ -289,7 +286,7 @@ const Home = () => {
                                 time = base_timer;
                                 userHasClicked = false;
                             } else if (time > 0) {
-                                timerBar.current.style.height = `${time * 74 / base_timer}%`;
+                                timerBar.current.style.height = `${time * 71 / base_timer}%`;
                             }
                             console.log(time);
                         }, 100)
@@ -302,7 +299,7 @@ const Home = () => {
                                 time = base_timer;
                                 userHasClicked = false;
                             } else if (time > 0) {
-                                timerBar.current.style.height = `${time * 74 / base_timer}%`;
+                                timerBar.current.style.height = `${time * 71 / base_timer}%`;
                             }
                             console.log(time);
                         }, 100)
@@ -676,7 +673,7 @@ const Home = () => {
                 <div className={`step game ${4 === step ? 'show' : ''} speak-mode`} ref={gameContainer}>
                     <img className="background" src={`img/bg_screen_2.png`} />
                     <div className="lovebar-container">
-                        <p className="lovebar" style={{ height: `${(life*74/100)}%` }}></p>
+                        <p className="lovebar" style={{ height: `${(life * 74 / 100)}%` }}></p>
                     </div>
                     <div className="timer-container" ref={timerBarContainer}>
                         <p className="timer" ref={timerBar}></p>

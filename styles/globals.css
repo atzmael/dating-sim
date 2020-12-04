@@ -254,7 +254,7 @@ a {
   transform: translateY(-50%);
   box-sizing: content-box;
   opacity: 0;
-  background-image: url('../public/img/Barre_love_03.png');
+  background-image: url('../public/img/Barre_timer_03.png');
   background-repeat: no-repeat;
   background-size: contain;
 }
@@ -263,13 +263,13 @@ a {
   opacity: 1;
 }
 .timer {
-  height: 74%;
+  height: 71%;
   width: 12px;
   background-color: #f0608E;
   margin: 0;
   position: absolute;
   left: 12px;
-  bottom: 62px;
+  bottom: 110px;
 }
 
 .players {
