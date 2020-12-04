@@ -220,7 +220,9 @@ const Home = () => {
             } */
 
             if (choices.length > 0) {
-                delay = 200.0;
+                if ("though" === chatmode) {
+                    delay = 200.0;
+                }
 
                 let choiceParagraphContainer = document.createElement('div');
                 choiceParagraphContainer.classList.add('choiceContainer');
