@@ -60,6 +60,7 @@ const Home = () => {
         let userHasClicked = false;
         let endofstory_one = false;
         let endofstory_two = false;
+        let mustDisplay = false;
 
         //console.log(currentActiveStory, story);
 
@@ -143,6 +144,13 @@ const Home = () => {
                         console.log("================CHAT MODE CHANGED:", splitTag.val)
                     }
 
+                    if (splitTag && splitTag.property === "DISPLAY_P") {
+                        if(splitTag.val == true) {
+                            console.log("must display this paraph")
+                            mustDisplay = true;
+                        }
+                    }
+
                     // Basic usage
                     // IMAGE: src
                     if (splitTag && splitTag.property == "IMAGE") {
@@ -194,7 +202,7 @@ const Home = () => {
                 showSpeak = false;
             }
 
-            if ("though" !== chatmode) {
+            if ("though" !== chatmode && !mustDisplay) {
                 console.log("Creating paragraph")
                 // Create paragraph element (initially hidden)
                 let paragraphElement = document.createElement('p');
