@@ -149,7 +149,7 @@ const Home = () => {
                             imageElement.style.transform = `translate(${randomX}px, ${randomY}px)`
                             imgLeftContainer.current.appendChild(imageElement);
                         } else {
-                            if (imgRightContainer.childElementCount === 3) {
+                            if (imgRightContainer.current.childElementCount === 3) {
                                 imgRightContainer.current.querySelector("img:first-child").remove()
                             }
                             imageElement.style.transform = `translate(${randomX}px, ${randomY}px)`
